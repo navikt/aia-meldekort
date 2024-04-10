@@ -7,8 +7,55 @@ on:
       - dev/**
 
 jobs:
-  build-cdn-docker:
-    name: Build, CDN & Docker
+  build-cdn:
+    name: Build and upload to CDN
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      packages: 'write'
+      id-token: 'write'
+
+    outputs:
+      upload_url: ${{ steps.extract-manifest-url.outputs.upload_url }}
+
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout
+
+      - uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+          node-version: '20.12.0'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@navikt'
+
+      - name: 'Install dependencies'
+        run: 'npm ci'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+
+      - name: 'Build cdn'
+        run: 'NODE_ENV=production npm run build:cdn'
+
+      - name: cdn-upload-js
+        uses: nais/deploy/actions/cdn-upload/v2@master
+        with:
+          team: paw
+          source: ./dist/
+          destination: '/aia/meldekort/'
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+
+      - name: "Extract manifest url"
+        id: extract-manifest-url
+        run: |
+          files="${{ steps.cdn-upload-js.outputs.uploaded }}"
+          first_file=$(echo $files | cut -d',' -f1)
+          echo "upload_url=https://cdn.nav.no/$first_file" >> $GITHUB_OUTPUT
+
+  build-storybook:
+    name: Build and upload to nais
     runs-on: ubuntu-latest
 
     permissions:
@@ -32,24 +79,15 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
-#      - name: 'Build cdn'
-#        run: 'NODE_ENV=production npm run build:cdn'
-
-#      - name: cdn-upload-js
-#        uses: nais/deploy/actions/cdn-upload/v2@master
-#        with:
-#          team: paw
-#          source: ./dist/js
-#          destination: '/aia/'
-#          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
-#          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+      - name: 'Build cdn'
+        run: 'NODE_ENV=production npm run build:cdn'
 
       - name: 'Build storybook'
         run: 'npm run build:storybook'
 
       - name: docker-build-push
-        uses: nais/docker-build-push@v0
         id: docker-build-push
+        uses: nais/docker-build-push@v0
         with:
           team: paw
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
@@ -57,13 +95,35 @@ jobs:
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
 
+
+  update-manifest-dev-gcp:
+    uses: navikt/tms-deploy/.github/workflows/oppdater-mikrofrontend-manifest-v2.yaml@main
+    needs: build-cdn
+    with:
+      cluster: dev-gcp
+      id: "aia-meldekort"
+      url: ${{needs.build-cdn.outputs.upload_url}}
+      commitmsg: ${{ github.event.head_commit.message}}
+    secrets: inherit
+
+  #  update-manifest-prod-gcp:
+  #    if: github.ref == 'refs/heads/main'
+  #    uses: navikt/tms-deploy/.github/workflows/oppdater-mikrofrontend-manifest-v2.yaml@main
+  #    needs: build
+  #    with:
+  #      cluster: prod-gcp
+  #      id: "tms-microfrontend-template"
+  #      url: ${{needs.build.outputs.upload_url}}
+  #      commitmsg: ${{ github.event.head_commit.message}}
+  #    secrets: inherit
+
   deploy-dev:
     if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/dev')
     name: Deploy til dev
     permissions:
       contents: "read"
       id-token: "write"
-    needs: build-cdn-docker
+    needs: build-storybook
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -73,24 +133,4 @@ jobs:
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/dev.yaml
-          VAR: image=${{ needs.build-cdn-docker.outputs.image }}
-
-#  deploy-prod:
-#    if: github.ref == 'refs/heads/main'
-#    name: Deploy til prod
-#    permissions:
-#      contents: "read"
-#      id-token: "write"
-#    needs: [build-cdn-docker, deploy-dev]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v4
-#      - name: Deploy
-#        uses: nais/deploy/actions/deploy@v2
-#        env:
-#          DRY_RUN: false
-#          CLUSTER: prod-gcp
-#          RESOURCE: .nais/prod.yaml
-#          VAR: image=${{ needs.build-cdn-docker.outputs.image }}
-
+          VAR: image=${{ needs.build-storybook.outputs.image }}

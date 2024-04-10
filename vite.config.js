@@ -34,23 +34,23 @@ const getConfig = () => ({
     },
 });
 
-// const getCdnConfig = () => ({
-//     plugins: getPlugins(),
-//     build: {
-//         manifest: true,
-//         copyPublicDir: false,
-//         rollupOptions: {
-//             input: {
-//                 app: resolve(__dirname, 'src/Mikrofrontend.tsx'),
-//             },
-//             preserveEntrySignatures: 'exports-only',
-//             output: {
-//                 entryFileNames: 'js/aia.[hash].js',
-//                 format: 'esm',
-//             },
-//         },
-//     },
-// });
+const getCdnConfig = () => ({
+    plugins: getPlugins(),
+    build: {
+        manifest: true,
+        copyPublicDir: false,
+        rollupOptions: {
+            input: {
+                app: resolve(__dirname, 'src/Mikrofrontend.tsx'),
+            },
+            preserveEntrySignatures: 'exports-only',
+            output: {
+                entryFileNames: 'js/aia-meldekort.[hash].js',
+                format: 'esm',
+            },
+        },
+    },
+});
 
 export default defineConfig(({ mode }) => {
     if (mode === 'cdn') {
