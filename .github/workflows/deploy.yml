@@ -55,7 +55,7 @@ jobs:
           echo "upload_url=https://cdn.nav.no/$first_file" >> $GITHUB_OUTPUT
 
   build-storybook:
-    name: Build and upload to nais
+    name: Build and upload storybook to nais
     runs-on: ubuntu-latest
 
     permissions:
