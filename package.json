@@ -1,0 +1,23 @@
+{
+  "name": "aia-meldekort",
+  "version": "1.0.0",
+  "description": "Microfrontend for meldekort for arbeidssøkere",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/navikt/aia-meldekort.git"
+  },
+  "keywords": [
+    "nav",
+    "arbeidssøker"
+  ],
+  "author": "Team Paw",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/navikt/aia-meldekort/issues"
+  },
+  "homepage": "https://github.com/navikt/aia-meldekort#readme"
+}
