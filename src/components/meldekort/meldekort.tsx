@@ -1,21 +1,25 @@
-import { BodyLong, Box } from "@navikt/ds-react";
+import {BodyLong, Box, Button, Checkbox, Heading, Radio, RadioGroup} from "@navikt/ds-react";
 
 const Meldekort = () => {
+    const handleChange = e => console.log(e);
     return (
         <Box background="surface-default" padding="6">
+            <div>
+                <Heading level="3" size="medium">
+                    Vil du fortsatt være arbeidssøker?
+                    </Heading>
+            </div>
             <BodyLong spacing>
-                Hvis du er helt eller delvis arbeidsledig eller permittert, kan du ha
-                rett til pengestøtte fra NAV.
+                Hvis du ønsker å være registrert som arbeidssøker hos NAV må du besvare disse spørsmålene. Informasjonen brukes i arbeidsmarkedsstatistikken.
             </BodyLong>
-            <BodyLong spacing>
-                NAV kan også gi deg råd og veiledning i situasjonen din.
-            </BodyLong>
-            <BodyLong spacing>
-                Hvis du ikke får dagpenger kan du ha rett til tiltakspenger. Dette er en
-                dagsats du får de dagene du deltar på et arbeidsmarkedstiltak. Et
-                arbeidsmarkedstiltak kan for eksempel være kurs, jobbklubb eller
-                arbeidstrening.
-            </BodyLong>
+
+            <RadioGroup legend="Har du vært i arbeid i perioden ...." onChange={handleChange}>
+                <Radio value="ja">Ja</Radio>
+                <Radio value="nei">Nei</Radio>
+            </RadioGroup>
+
+            <Checkbox value="bekreft">Jeg vil fortsatt være registrert som arbeidssøker</Checkbox>
+            <Button variant="primary">Send inn</Button>
         </Box>
     );
 };
