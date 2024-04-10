@@ -1,14 +1,14 @@
 kind: Application
 apiVersion: nais.io/v1alpha1
 metadata:
-  name: aia-min-side
+  name: aia-meldekort
   namespace: paw
   labels:
     team: paw
 spec:
   image: {{image}}
   ingresses:
-    - https://aia-min-side.intern.dev.nav.no
+    - https://aia-meldekort.intern.dev.nav.no
   liveness:
     path: /isAlive
     port: 8080
