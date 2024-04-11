@@ -13,5 +13,19 @@ type Story = StoryObj<typeof meta>;
 
 
 export const MeldekortStory: Story = {
-    args: { },
+    args: {
+        visIkkeSvartAdvarsel: false
+    },
 };
+
+export const MeldekortIkkeSvartLangFrist: Story = {
+    args: {
+        visIkkeSvartAdvarsel: 'warning'
+    }
+}
+
+export const MeldekortIkkeSvartKortFrist: Story = {
+    args: {
+        visIkkeSvartAdvarsel: 'error'
+    }
+}
