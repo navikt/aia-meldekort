@@ -1,5 +1,5 @@
 import type {Meta, StoryObj} from "@storybook/react";
-import Meldekort from "./meldekort";
+import Meldekort from "./meldekort-skjema";
 
 const meta = {
     title: 'Komponenter/Meldekort',

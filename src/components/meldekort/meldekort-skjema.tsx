@@ -1,12 +1,16 @@
 import {BodyLong, Box, Button, Checkbox, Heading, Radio, RadioGroup} from '@navikt/ds-react';
 
-const Meldekort = () => {
+interface Props {
+
+}
+
+const MeldekortSkjema = (props: Props) => {
   return (
         <Box background="surface-default" borderRadius={'xlarge'} borderColor={'border-subtle'} borderWidth={'1'} className={'divide-y divide-gray-300'}>
             <div className={'py-4 px-6'}>
                 <Heading level="3" size="medium">
                     Vil du fortsatt være arbeidssøker?
-                    </Heading>
+                </Heading>
             </div>
           <div className={'py-4 px-6'}>
             <BodyLong spacing>
@@ -19,10 +23,10 @@ const Meldekort = () => {
             </RadioGroup>
 
             <Checkbox value="bekreft">Jeg vil fortsatt være registrert som arbeidssøker</Checkbox>
-            <Button variant="primary">Send inn</Button>
+            <Button variant="primary" className={'mt-4'}>Send inn</Button>
           </div>
         </Box>
     );
 };
 
-export default Meldekort
+export default MeldekortSkjema

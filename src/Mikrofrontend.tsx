@@ -1,4 +1,4 @@
-import Meldekort from "./components/meldekort/meldekort";
+import Meldekort from "./components/meldekort/meldekort-skjema";
 
 function Mikrofrontend() {
     return <Meldekort />
