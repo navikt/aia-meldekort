@@ -37,8 +37,6 @@ const getConfig = () => ({
 const getCdnConfig = () => ({
     plugins: getPlugins(),
     build: {
-        manifest: true,
-        copyPublicDir: false,
         rollupOptions: {
             input: {
                 app: resolve(__dirname, 'src/Mikrofrontend.tsx'),
