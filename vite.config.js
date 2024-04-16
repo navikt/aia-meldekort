@@ -45,7 +45,7 @@ const getCdnConfig = () => ({
             },
             preserveEntrySignatures: 'exports-only',
             output: {
-                entryFileNames: 'js/aia-meldekort.[hash].js',
+                entryFileNames: 'aia-meldekort.[hash].js',
                 format: 'esm',
             },
         },
