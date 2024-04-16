@@ -43,7 +43,7 @@ jobs:
         with:
           team: paw
           source: ./dist/
-          destination: '/aia/meldekort/'
+          destination: '/aia-meldekort/'
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
 
