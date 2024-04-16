@@ -15,8 +15,8 @@ const MeldekortSkjema = (props: Props) => {
             borderWidth={'1'}
             className={'divide-y divide-gray-300'}
         >
-            <div className={'py-4 px-6'}>
-                <Heading level="3" size="medium">
+            <div className={'pt-3 pb-4 px-5'}>
+                <Heading level="3" size="small">
                     Vil du fortsatt være arbeidssøker?
                 </Heading>
             </div>
