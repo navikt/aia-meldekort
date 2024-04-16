@@ -39,6 +39,7 @@ jobs:
         run: 'NODE_ENV=production npm run build:cdn'
 
       - name: cdn-upload-js
+        id: cdn-upload-js
         uses: nais/deploy/actions/cdn-upload/v2@master
         with:
           team: paw
