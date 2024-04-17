@@ -1,31 +1,19 @@
 import type {Meta, StoryObj} from "@storybook/react";
-import Meldekort from "./meldekort-skjema";
+import { Meldekort } from "./meldekort";
 
 const meta = {
-    title: 'Komponenter/Meldekort',
+    title: 'Meldekort',
     component: Meldekort,
     tags: ['autodocs'],
-    args: { },
+    args: {},
 } satisfies Meta<typeof Meldekort>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-
 export const MeldekortStory: Story = {
     args: {
-        visIkkeSvartAdvarsel: false
+        sprak: 'nb'
     },
 };
 
-export const MeldekortIkkeSvartLangFrist: Story = {
-    args: {
-        visIkkeSvartAdvarsel: 'warning'
-    }
-}
-
-export const MeldekortIkkeSvartKortFrist: Story = {
-    args: {
-        visIkkeSvartAdvarsel: 'error'
-    }
-}
