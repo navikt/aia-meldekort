@@ -1,8 +1,8 @@
-import Meldekort from "./components/meldekort/meldekort-skjema";
+import { Meldekort } from "./components/meldekort/meldekort";
 import './index.css';
 
 function Mikrofrontend() {
-    return <Meldekort visIkkeSvartAdvarsel={false}/>
+    return <Meldekort sprak={'nb'}/>
 }
 
 export default Mikrofrontend;
