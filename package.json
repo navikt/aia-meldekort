@@ -7,6 +7,7 @@
   "scripts": {
     "test": "npm test",
     "dev": "vite",
+    "start": "npm run storybook",
     "build:cdn": "vite build --mode cdn",
     "storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build"

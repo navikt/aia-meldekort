@@ -1,11 +1,17 @@
 import { Box, Heading } from '@navikt/ds-react';
 import { lagHentTekstForSprak } from '@navikt/arbeidssokerregisteret-utils';
 import { MeldekortSkjema } from './meldekort-skjema';
-import { MeldekortBesvart } from './meldekort-besvart';
 import { Sprak } from '../../types/sprak';
+import { useState } from 'react';
+import { MeldekortBesvart } from './meldekort-besvart';
 
 export interface Props {
     sprak: Sprak;
+    besvarelse?: {
+        dato: string;
+        harVaertIArbeid: boolean;
+        oenskerAaVaereRegistrert: boolean;
+    };
 }
 
 const TEKSTER = {
@@ -14,15 +20,22 @@ const TEKSTER = {
     },
 };
 
-interface Besvarelse {
-    harJobbet?: boolean;
-    onskerAaVaereRegistrert?: boolean;
-    dato: string;
-}
-
 function Meldekort(props: Props) {
     const { sprak } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
+    const [harSendtInnBesvarelse, settHarSendtInnBesvarelse] = useState<boolean>(false);
+
+    const [mockBesvarelseBackend, settMockBesvarelseBackend] = useState<any>(null);
+    const [endreBesvarelse, settEndreBesvarelse] = useState<boolean>(false);
+
+    const onSubmitSkjema = (besvarelse: any) => {
+        settMockBesvarelseBackend(besvarelse);
+        settHarSendtInnBesvarelse(true);
+        settEndreBesvarelse(false);
+    };
+
+    const harBesvarelse = Boolean(mockBesvarelseBackend);
+
     return (
         <Box
             background="surface-default"
@@ -37,17 +50,27 @@ function Meldekort(props: Props) {
                 </Heading>
             </div>
             <div className={'py-4 px-6'}>
-                {/*<MeldekortBesvart*/}
-                {/*    periode={'21.mars - 6. april'}*/}
-                {/*    innsendtDato={'06.03'}*/}
-                {/*    nesteDato={'20.04'}*/}
-                {/*    vaertIArbeid={true}*/}
-                {/*    onskerAaVaereRegistrert={true}*/}
-                {/*    visAlertBoks={false}*/}
-                {/*    onEndreSvar={() => console.log('endre')}*/}
-                {/*    sprak={sprak}*/}
-                {/*/>*/}
-                <MeldekortSkjema sprak={sprak} />
+                {harBesvarelse && !endreBesvarelse && (
+                    <MeldekortBesvart
+                        periode={'21.mars - 6. april'}
+                        innsendtDato={'06.03'}
+                        nesteDato={'20.04'}
+                        vaertIArbeid={true}
+                        onskerAaVaereRegistrert={true}
+                        visAlertBoks={harSendtInnBesvarelse}
+                        onEndreSvar={() => settEndreBesvarelse(true)}
+                        sprak={sprak}
+                    />
+                )}
+                {(!harBesvarelse || endreBesvarelse) && (
+                    <MeldekortSkjema
+                        sprak={sprak}
+                        fristDato={'20. april'}
+                        periode={'21.mars - 6. april'}
+                        onSubmit={onSubmitSkjema}
+                        besvarelse={mockBesvarelseBackend}
+                    />
+                )}
             </div>
         </Box>
     );
