@@ -3,6 +3,7 @@ import { Alert, BodyLong, Button, Checkbox, Heading, Radio, RadioGroup } from '@
 import InfoTekst from './info-tekst';
 import { Sprak } from '../../types/sprak';
 import { useEffect, useState } from 'react';
+import BekreftAvsluttPeriode from './bekreft-avslutt-periode';
 
 export interface Props {
     visIkkeSvartAdvarsel?: 'warning' | 'error';
@@ -46,14 +47,16 @@ const getRadioGroupValue = (skjema: Skjema, harBesvarelse: boolean) => {
 };
 
 const MeldekortSkjema = (props: Props) => {
-    const { visIkkeSvartAdvarsel, sprak, fristDato, periode, besvarelse, onSubmit, onCancel } = props;
+    const { visIkkeSvartAdvarsel, sprak, fristDato, periode, besvarelse, onCancel } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     const [skjemaState, settSkjemaState] = useState<Skjema>({
         harVaertIArbeid: besvarelse?.harVaertIArbeid,
         oenskerAaVaereRegistrert: Boolean(besvarelse?.oenskerAaVaereRegistrert),
     });
-    const [harGyldigSkjema, settHarGyldigSkjema] = useState<boolean>(false);
 
+    const [harGyldigSkjema, settHarGyldigSkjema] = useState<boolean>(false);
+    const [visBekreftAvsluttPeriode, settVisBekreftAvsluttPeriode] = useState<boolean>(false);
+    const [harAvbruttUtmelding, settHarAvbruttUtmelding] = useState<boolean>(false);
     useEffect(() => {
         settHarGyldigSkjema(
             Object.values(skjemaState).filter((v) => typeof v !== 'undefined').length ===
@@ -61,7 +64,29 @@ const MeldekortSkjema = (props: Props) => {
         );
     }, [skjemaState]);
 
+    const onSubmit = () => {
+        if (!skjemaState.oenskerAaVaereRegistrert) {
+            settVisBekreftAvsluttPeriode(true);
+            return;
+        }
+
+        props.onSubmit(skjemaState as any);
+    };
+
     const visAvbrytKnapp = Boolean(besvarelse);
+
+    if (visBekreftAvsluttPeriode) {
+        return (
+            <BekreftAvsluttPeriode
+                onSubmit={() => props.onSubmit(skjemaState as any)}
+                onCancel={() => {
+                    settVisBekreftAvsluttPeriode(false);
+                    settHarAvbruttUtmelding(true);
+                }}
+                sprak={sprak}
+            />
+        );
+    }
 
     return (
         <>
@@ -78,26 +103,20 @@ const MeldekortSkjema = (props: Props) => {
             <InfoTekst sprak={sprak} />
             <RadioGroup
                 legend={`${tekst('beenWorking')} ${periode}?`}
-                value={getRadioGroupValue(skjemaState, Boolean(besvarelse))}
+                value={getRadioGroupValue(skjemaState, Boolean(besvarelse) || harAvbruttUtmelding)}
                 onChange={(e) => settSkjemaState((state) => ({ ...state, harVaertIArbeid: e === 'ja' }))}
             >
-                <Radio value="ja">{tekst('yes')}</Radio>
-                <Radio value="nei">{tekst('no')}</Radio>
+                <Radio value="ja" checked={skjemaState.harVaertIArbeid === true}>{tekst('yes')}</Radio>
+                <Radio value="nei" checked={skjemaState.harVaertIArbeid === false}>{tekst('no')}</Radio>
             </RadioGroup>
 
             <Checkbox
-                value="bekreft"
                 checked={skjemaState.oenskerAaVaereRegistrert}
                 onChange={(e) => settSkjemaState((state) => ({ ...state, oenskerAaVaereRegistrert: e.target.checked }))}
             >
                 {tekst('wantToBeRegistered')}
             </Checkbox>
-            <Button
-                variant="primary"
-                className={'mt-4'}
-                disabled={!harGyldigSkjema}
-                onClick={() => onSubmit(skjemaState as any)}
-            >
+            <Button variant="primary" className={'mt-4'} disabled={!harGyldigSkjema} onClick={onSubmit}>
                 {tekst('submit')}
             </Button>
             {visAvbrytKnapp && (
