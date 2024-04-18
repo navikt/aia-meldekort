@@ -15,6 +15,12 @@ export const MeldekortSkjemaStory: Story = {
     args: {
         sprak: 'nb',
         fristDato: '20. april',
-        periode: '21.mars - 6. april'
+        periode: '21.mars - 6. april',
+        onCancel() {
+            console.log('onCancel');
+        },
+        onSubmit(data) {
+            console.log('onSubmit', data);
+        },
     },
 };

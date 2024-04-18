@@ -15,6 +15,7 @@ export interface Props {
     fristDato: string;
     periode: string;
     onSubmit(data: { harVaertIArbeid: boolean; oenskerAaVaereRegistrert: boolean }): void;
+    onCancel(): void;
 }
 
 const TEKSTER = {
@@ -24,6 +25,7 @@ const TEKSTER = {
         no: 'Nei',
         wantToBeRegistered: 'Jeg vil fortsatt være registrert som arbeidssøker',
         submit: 'Send inn',
+        cancel: 'Avbryt',
         noReply: 'Du har ikke svart',
         alertText1: 'Hvis du ikke svarer i løpet av ',
         alertText2: ', vil du ikke lenger være registrert som arbeidssøker fra ',
@@ -35,8 +37,16 @@ interface Skjema {
     oenskerAaVaereRegistrert: boolean;
 }
 
+const getRadioGroupValue = (skjema: Skjema, harBesvarelse: boolean) => {
+    if (!harBesvarelse) {
+        return;
+    }
+
+    return skjema.harVaertIArbeid ? 'ja' : 'nei';
+};
+
 const MeldekortSkjema = (props: Props) => {
-    const { visIkkeSvartAdvarsel, sprak, fristDato, periode, besvarelse, onSubmit } = props;
+    const { visIkkeSvartAdvarsel, sprak, fristDato, periode, besvarelse, onSubmit, onCancel } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     const [skjemaState, settSkjemaState] = useState<Skjema>({
         harVaertIArbeid: besvarelse?.harVaertIArbeid,
@@ -50,6 +60,8 @@ const MeldekortSkjema = (props: Props) => {
                 Object.keys(skjemaState).length,
         );
     }, [skjemaState]);
+
+    const visAvbrytKnapp = Boolean(besvarelse);
 
     return (
         <>
@@ -66,14 +78,11 @@ const MeldekortSkjema = (props: Props) => {
             <InfoTekst sprak={sprak} />
             <RadioGroup
                 legend={`${tekst('beenWorking')} ${periode}?`}
+                value={getRadioGroupValue(skjemaState, Boolean(besvarelse))}
                 onChange={(e) => settSkjemaState((state) => ({ ...state, harVaertIArbeid: e === 'ja' }))}
             >
-                <Radio value="ja" checked={skjemaState.harVaertIArbeid === true}>
-                    {tekst('yes')}
-                </Radio>
-                <Radio value="nei" checked={skjemaState.harVaertIArbeid === false}>
-                    {tekst('no')}
-                </Radio>
+                <Radio value="ja">{tekst('yes')}</Radio>
+                <Radio value="nei">{tekst('no')}</Radio>
             </RadioGroup>
 
             <Checkbox
@@ -91,6 +100,11 @@ const MeldekortSkjema = (props: Props) => {
             >
                 {tekst('submit')}
             </Button>
+            {visAvbrytKnapp && (
+                <Button className={'ml-4'} variant={'tertiary'} onClick={onCancel}>
+                    {tekst('cancel')}
+                </Button>
+            )}
         </>
     );
 };

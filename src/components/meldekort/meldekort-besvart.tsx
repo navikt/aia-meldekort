@@ -1,14 +1,17 @@
 import { lagHentTekstForSprak } from '@navikt/arbeidssokerregisteret-utils';
 import { Alert, BodyLong, BodyShort, Button, Heading, List } from '@navikt/ds-react';
 import InfoTekst from './info-tekst';
-import {Sprak} from '../../types/sprak';
+import { Sprak } from '../../types/sprak';
 
 export interface Props {
     periode: string;
     innsendtDato: string;
     nesteDato: string;
-    vaertIArbeid: boolean;
-    onskerAaVaereRegistrert: boolean;
+    besvarelse: {
+        dato: string;
+        harVaertIArbeid: boolean;
+        oenskerAaVaereRegistrert: boolean;
+    };
     visBekreftelse: boolean;
     onEndreSvar(): void;
     sprak: Sprak;
@@ -30,16 +33,7 @@ const TEKSTER = {
 };
 
 export const MeldekortBesvart = (props: Props) => {
-    const {
-        sprak,
-        visBekreftelse,
-        periode,
-        innsendtDato,
-        nesteDato,
-        onskerAaVaereRegistrert,
-        vaertIArbeid,
-        onEndreSvar,
-    } = props;
+    const { sprak, visBekreftelse, periode, innsendtDato, nesteDato, besvarelse, onEndreSvar } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     return (
         <>
@@ -58,9 +52,13 @@ export const MeldekortBesvart = (props: Props) => {
                     {innsendtDato} {tekst('svarteDu')}
                 </BodyShort>
                 <List size={'small'}>
-                    <List.Item>{tekst(vaertIArbeid ? 'vaertIArbeid' : 'ikkeVaertIArbeid')}</List.Item>
+                    <List.Item>{tekst(besvarelse.harVaertIArbeid ? 'vaertIArbeid' : 'ikkeVaertIArbeid')}</List.Item>
                     <List.Item>
-                        {tekst(onskerAaVaereRegistrert ? 'onskerAaVaereRegistrert' : 'onskerIkkeAaVaereRegistrert')}
+                        {tekst(
+                            besvarelse.oenskerAaVaereRegistrert
+                                ? 'onskerAaVaereRegistrert'
+                                : 'onskerIkkeAaVaereRegistrert',
+                        )}
                     </List.Item>
                 </List>
                 <Button variant={'tertiary'} onClick={onEndreSvar}>

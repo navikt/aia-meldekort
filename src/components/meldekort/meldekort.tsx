@@ -34,6 +34,11 @@ function Meldekort(props: Props) {
         settEndreBesvarelse(false);
     };
 
+    const onCancel = () => {
+        settHarSendtInnBesvarelse(false);
+        settEndreBesvarelse(false);
+    };
+
     const harBesvarelse = Boolean(mockBesvarelseBackend);
 
     return (
@@ -55,8 +60,7 @@ function Meldekort(props: Props) {
                         periode={'21.mars - 6. april'}
                         innsendtDato={'06.03'}
                         nesteDato={'20.04'}
-                        vaertIArbeid={true}
-                        onskerAaVaereRegistrert={true}
+                        besvarelse={mockBesvarelseBackend}
                         visBekreftelse={harSendtInnBesvarelse}
                         onEndreSvar={() => settEndreBesvarelse(true)}
                         sprak={sprak}
@@ -67,8 +71,9 @@ function Meldekort(props: Props) {
                         sprak={sprak}
                         fristDato={'20. april'}
                         periode={'21.mars - 6. april'}
-                        onSubmit={onSubmitSkjema}
                         besvarelse={mockBesvarelseBackend}
+                        onSubmit={onSubmitSkjema}
+                        onCancel={onCancel}
                     />
                 )}
             </div>
