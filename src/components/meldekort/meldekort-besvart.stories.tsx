@@ -18,7 +18,7 @@ export const MeldekortBesvartStory: Story = {
     nesteDato: '20.04',
     vaertIArbeid: true,
     onskerAaVaereRegistrert: true,
-    visAlertBoks: true,
+    visBekreftelse: true,
     sprak: 'nb',
     onEndreSvar() {
       console.log('onEndreSvar')

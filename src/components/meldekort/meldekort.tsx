@@ -57,7 +57,7 @@ function Meldekort(props: Props) {
                         nesteDato={'20.04'}
                         vaertIArbeid={true}
                         onskerAaVaereRegistrert={true}
-                        visAlertBoks={harSendtInnBesvarelse}
+                        visBekreftelse={harSendtInnBesvarelse}
                         onEndreSvar={() => settEndreBesvarelse(true)}
                         sprak={sprak}
                     />

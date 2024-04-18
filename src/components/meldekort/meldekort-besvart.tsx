@@ -9,7 +9,7 @@ export interface Props {
     nesteDato: string;
     vaertIArbeid: boolean;
     onskerAaVaereRegistrert: boolean;
-    visAlertBoks: boolean;
+    visBekreftelse: boolean;
     onEndreSvar(): void;
     sprak: Sprak;
 }
@@ -32,7 +32,7 @@ const TEKSTER = {
 export const MeldekortBesvart = (props: Props) => {
     const {
         sprak,
-        visAlertBoks,
+        visBekreftelse,
         periode,
         innsendtDato,
         nesteDato,
@@ -43,7 +43,7 @@ export const MeldekortBesvart = (props: Props) => {
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     return (
         <>
-            {visAlertBoks && (
+            {visBekreftelse && (
                 <Alert variant={'success'} className={'mb-4'}>
                     <Heading size={'xsmall'}>{tekst('alertHeading')}</Heading>
                     <BodyLong>{tekst('alertBody')}</BodyLong>
