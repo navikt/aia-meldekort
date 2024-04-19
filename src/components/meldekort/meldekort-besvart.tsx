@@ -21,6 +21,8 @@ const TEKSTER = {
     nb: {
         alertHeading: 'Vi har registrert svaret ditt',
         alertBody: 'Hvis du ønsker å endre noe kan du sende inn svaret på nytt.',
+        alertHeadingUtmeldt: 'Du er ikke lenger registrert som arbeidssøker',
+        alertBodyUtmeldt: 'Hvis du ønsker å endre dette må du registrere deg på nytt',
         heading: 'Har du vært i arbeid i perioden',
         svarteDu: 'svarte du at',
         vaertIArbeid: 'du har vært i arbeid foregående 14 dager',
@@ -28,11 +30,32 @@ const TEKSTER = {
         onskerAaVaereRegistrert: 'at du ønsker å være registrert som arbeidssøker',
         onskerIkkeAaVaereRegistrert: 'at du ønsker ikke å være registrert som arbeidssøker',
         buttonText: 'Jeg ønsker å endre svarene mine',
+        buttonTextUtmeldt: 'Jeg ønsker å registrere meg på nytt',
         nesteGang: 'Neste gang du må svare på meldeplikt er ',
     },
 };
 
-export const MeldekortBesvart = (props: Props) => {
+const BesvarelseInfo = (props: { sprak: Sprak; besvarelse: Props['besvarelse']; innsendtDato: string }) => {
+    const { sprak, besvarelse, innsendtDato } = props;
+    const tekst = lagHentTekstForSprak(TEKSTER, sprak);
+    return (
+        <>
+            <BodyShort>
+                {innsendtDato} {tekst('svarteDu')}
+            </BodyShort>
+            <List size={'small'}>
+                <List.Item>{tekst(besvarelse.harVaertIArbeid ? 'vaertIArbeid' : 'ikkeVaertIArbeid')}</List.Item>
+                <List.Item>
+                    {tekst(
+                        besvarelse.oenskerAaVaereRegistrert ? 'onskerAaVaereRegistrert' : 'onskerIkkeAaVaereRegistrert',
+                    )}
+                </List.Item>
+            </List>
+        </>
+    );
+};
+
+const OenskerAaVaereRegistrert = (props: Props) => {
     const { sprak, visBekreftelse, periode, innsendtDato, nesteDato, besvarelse, onEndreSvar } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     return (
@@ -48,19 +71,7 @@ export const MeldekortBesvart = (props: Props) => {
                 {tekst('heading')} {periode}
             </Heading>
             <div className={'px-6 py-4'}>
-                <BodyShort>
-                    {innsendtDato} {tekst('svarteDu')}
-                </BodyShort>
-                <List size={'small'}>
-                    <List.Item>{tekst(besvarelse.harVaertIArbeid ? 'vaertIArbeid' : 'ikkeVaertIArbeid')}</List.Item>
-                    <List.Item>
-                        {tekst(
-                            besvarelse.oenskerAaVaereRegistrert
-                                ? 'onskerAaVaereRegistrert'
-                                : 'onskerIkkeAaVaereRegistrert',
-                        )}
-                    </List.Item>
-                </List>
+                <BesvarelseInfo sprak={sprak} besvarelse={besvarelse} innsendtDato={innsendtDato} />
                 <Button variant={'tertiary'} onClick={onEndreSvar}>
                     {tekst('buttonText')}
                 </Button>
@@ -69,5 +80,40 @@ export const MeldekortBesvart = (props: Props) => {
                 </Heading>
             </div>
         </>
+    );
+};
+
+const OenskerIkkeAaVaereRegistrert = (props: Props) => {
+    const { sprak, visBekreftelse, periode, innsendtDato, besvarelse } = props;
+    const tekst = lagHentTekstForSprak(TEKSTER, sprak);
+    return (
+        <>
+            {visBekreftelse && (
+                <Alert variant={'success'} className={'mb-4'}>
+                    <Heading size={'xsmall'}>{tekst('alertHeadingUtmeldt')}</Heading>
+                    <BodyLong>{tekst('alertBodyUtmeldt')}</BodyLong>
+                </Alert>
+            )}
+            {!visBekreftelse && <InfoTekst sprak={sprak} />}
+            <Heading size={'xsmall'}>
+                {tekst('heading')} {periode}
+            </Heading>
+            <div className={'px-6 py-4'}>
+                <BesvarelseInfo sprak={sprak} besvarelse={besvarelse} innsendtDato={innsendtDato} />
+                <Button variant={'tertiary'} onClick={() => console.log('Jeg ønsker å registrere meg på nytt')}>
+                    {tekst('buttonTextUtmeldt')}
+                </Button>
+            </div>
+        </>
+    );
+};
+
+export const MeldekortBesvart = (props: Props) => {
+    const { besvarelse } = props;
+
+    return besvarelse.oenskerAaVaereRegistrert ? (
+        <OenskerAaVaereRegistrert {...props} />
+    ) : (
+        <OenskerIkkeAaVaereRegistrert {...props} />
     );
 };

@@ -28,3 +28,21 @@ export const MeldekortBesvartStory: Story = {
         },
     },
 };
+
+export const MeldekortUtmeldtStory: Story = {
+    args: {
+        periode: '21. mars - 6. april',
+        innsendtDato: '06.03',
+        nesteDato: '20.04',
+        besvarelse: {
+            harVaertIArbeid: true,
+            oenskerAaVaereRegistrert: false,
+            dato: '',
+        },
+        visBekreftelse: true,
+        sprak: 'nb',
+        onEndreSvar() {
+            console.log('onEndreSvar');
+        },
+    },
+}
