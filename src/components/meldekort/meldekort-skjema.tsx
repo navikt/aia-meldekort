@@ -3,7 +3,7 @@ import { Alert, BodyLong, Button, Checkbox, Heading, Radio, RadioGroup } from '@
 import InfoTekst from './info-tekst';
 import { Sprak } from '../../types/sprak';
 import { useEffect, useState } from 'react';
-import BekreftAvsluttPeriode from './bekreft-avslutt-periode';
+import { BekreftAvsluttPeriode } from './bekreft-avslutt-periode';
 
 export interface Props {
     visIkkeSvartAdvarsel?: 'warning' | 'error';
@@ -106,8 +106,12 @@ const MeldekortSkjema = (props: Props) => {
                 value={getRadioGroupValue(skjemaState, Boolean(besvarelse) || harAvbruttUtmelding)}
                 onChange={(e) => settSkjemaState((state) => ({ ...state, harVaertIArbeid: e === 'ja' }))}
             >
-                <Radio value="ja" checked={skjemaState.harVaertIArbeid === true}>{tekst('yes')}</Radio>
-                <Radio value="nei" checked={skjemaState.harVaertIArbeid === false}>{tekst('no')}</Radio>
+                <Radio value="ja" checked={skjemaState.harVaertIArbeid === true}>
+                    {tekst('yes')}
+                </Radio>
+                <Radio value="nei" checked={skjemaState.harVaertIArbeid === false}>
+                    {tekst('no')}
+                </Radio>
             </RadioGroup>
 
             <Checkbox
