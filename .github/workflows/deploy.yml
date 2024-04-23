@@ -35,6 +35,9 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
+      - name: 'Run tests'
+        run: 'npm run test:ci'
+
       - name: 'Build cdn'
         run: 'NODE_ENV=production npm run build:cdn'
 
@@ -80,8 +83,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
-      - name: 'Build cdn'
-        run: 'NODE_ENV=production npm run build:cdn'
+      - name: 'Run tests'
+        run: 'npm run test:ci'
 
       - name: 'Build storybook'
         run: 'npm run build:storybook'
