@@ -1,6 +1,6 @@
 import react from '@vitejs/plugin-react';
-import {defineConfig} from 'vite';
-import {rollupImportMapPlugin} from 'rollup-plugin-import-map';
+import { defineConfig } from 'vite';
+import { rollupImportMapPlugin } from 'rollup-plugin-import-map';
 import terser from '@rollup/plugin-terser';
 import svgr from 'vite-plugin-svgr';
 import { resolve } from 'path';
@@ -37,6 +37,7 @@ const getConfig = () => ({
 const getCdnConfig = () => ({
     plugins: getPlugins(),
     build: {
+        manifest: true,
         rollupOptions: {
             input: {
                 app: resolve(__dirname, 'src/Mikrofrontend.tsx'),

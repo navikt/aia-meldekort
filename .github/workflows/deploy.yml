@@ -100,15 +100,15 @@ jobs:
       image: ${{ steps.docker-build-push.outputs.image }}
 
 
-  update-manifest-dev-gcp:
-    uses: navikt/tms-deploy/.github/workflows/oppdater-mikrofrontend-manifest-v2.yaml@main
-    needs: build-cdn
-    with:
-      cluster: dev-gcp
-      id: "aia-meldekort"
-      url: ${{needs.build-cdn.outputs.upload_url}}
-      commitmsg: ${{ github.event.head_commit.message}}
-    secrets: inherit
+#  update-manifest-dev-gcp:
+#    uses: navikt/tms-deploy/.github/workflows/oppdater-mikrofrontend-manifest-v2.yaml@main
+#    needs: build-cdn
+#    with:
+#      cluster: dev-gcp
+#      id: "aia-meldekort"
+#      url: ${{needs.build-cdn.outputs.upload_url}}
+#      commitmsg: ${{ github.event.head_commit.message}}
+#    secrets: inherit
 
   #  update-manifest-prod-gcp:
   #    if: github.ref == 'refs/heads/main'
