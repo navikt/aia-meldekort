@@ -12,7 +12,8 @@
         "build:cdn": "vite build --mode cdn",
         "storybook": "storybook dev -p 6006",
         "build:storybook": "storybook build",
-        "prepare": "husky"
+        "prepare": "husky",
+        "refresh": "rm -rf node_modules && rm package-lock.json && npm i"
     },
     "repository": {
         "type": "git",
@@ -71,5 +72,8 @@
     },
     "lint-staged": {
         "*.{js,jsx,json,md,ts,tsx}": "prettier --write"
+    },
+    "engines": {
+        "node": ">=20.15.0"
     }
 }
