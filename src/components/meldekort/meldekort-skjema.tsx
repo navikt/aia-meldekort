@@ -1,5 +1,5 @@
 import { lagHentTekstForSprak } from '@navikt/arbeidssokerregisteret-utils';
-import { Alert, BodyLong, Button, Checkbox, Heading, Radio, RadioGroup } from '@navikt/ds-react';
+import { Alert, BodyLong, Button, Heading, Radio, RadioGroup } from '@navikt/ds-react';
 import InfoTekst from './info-tekst';
 import { Sprak } from '../../types/sprak';
 import { useEffect, useState } from 'react';
@@ -24,7 +24,7 @@ const TEKSTER = {
         beenWorking: 'Har du vært i arbeid i perioden ',
         yes: 'Ja',
         no: 'Nei',
-        wantToBeRegistered: 'Jeg vil fortsatt være registrert som arbeidssøker',
+        wantToBeRegistered: 'Vil du fortsatt være registrert som arbeidssøker?',
         submit: 'Send inn',
         cancel: 'Avbryt',
         noReply: 'Du har ikke svart',
@@ -35,15 +35,15 @@ const TEKSTER = {
 
 interface Skjema {
     harVaertIArbeid?: boolean;
-    oenskerAaVaereRegistrert: boolean;
+    oenskerAaVaereRegistrert?: boolean;
 }
 
-const getRadioGroupValue = (skjema: Skjema, harBesvarelse: boolean) => {
+const getRadioGroupValue = (skjemVerdi: boolean | undefined, harBesvarelse: boolean) => {
     if (!harBesvarelse) {
         return;
     }
 
-    return skjema.harVaertIArbeid ? 'ja' : 'nei';
+    return skjemVerdi ? 'ja' : 'nei';
 };
 
 const MeldekortSkjema = (props: Props) => {
@@ -51,7 +51,7 @@ const MeldekortSkjema = (props: Props) => {
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     const [skjemaState, settSkjemaState] = useState<Skjema>({
         harVaertIArbeid: besvarelse?.harVaertIArbeid,
-        oenskerAaVaereRegistrert: Boolean(besvarelse?.oenskerAaVaereRegistrert),
+        oenskerAaVaereRegistrert: besvarelse?.oenskerAaVaereRegistrert,
     });
 
     const [harGyldigSkjema, settHarGyldigSkjema] = useState<boolean>(false);
@@ -103,7 +103,7 @@ const MeldekortSkjema = (props: Props) => {
             <InfoTekst sprak={sprak} />
             <RadioGroup
                 legend={`${tekst('beenWorking')} ${periode}?`}
-                value={getRadioGroupValue(skjemaState, Boolean(besvarelse) || harAvbruttUtmelding)}
+                value={getRadioGroupValue(skjemaState.harVaertIArbeid, Boolean(besvarelse) || harAvbruttUtmelding)}
                 onChange={(e) => settSkjemaState((state) => ({ ...state, harVaertIArbeid: e === 'ja' }))}
             >
                 <Radio value="ja" checked={skjemaState.harVaertIArbeid === true}>
@@ -114,12 +114,17 @@ const MeldekortSkjema = (props: Props) => {
                 </Radio>
             </RadioGroup>
 
-            <Checkbox
-                checked={skjemaState.oenskerAaVaereRegistrert}
-                onChange={(e) => settSkjemaState((state) => ({ ...state, oenskerAaVaereRegistrert: e.target.checked }))}
+            <RadioGroup
+                legend={`${tekst('wantToBeRegistered')}`}
+                value={getRadioGroupValue(
+                    skjemaState.oenskerAaVaereRegistrert,
+                    Boolean(besvarelse) || harAvbruttUtmelding,
+                )}
+                onChange={(e) => settSkjemaState((state) => ({ ...state, oenskerAaVaereRegistrert: e === 'ja' }))}
             >
-                {tekst('wantToBeRegistered')}
-            </Checkbox>
+                <Radio value="ja">{tekst('yes')}</Radio>
+                <Radio value="nei">{tekst('no')}</Radio>
+            </RadioGroup>
             <Button variant="primary" className={'mt-4'} disabled={!harGyldigSkjema} onClick={onSubmit}>
                 {tekst('submit')}
             </Button>
