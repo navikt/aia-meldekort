@@ -25,7 +25,7 @@ function Meldekort(props: Props) {
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     const [harSendtInnBesvarelse, settHarSendtInnBesvarelse] = useState<boolean>(false);
 
-    const [mockBesvarelseBackend, settMockBesvarelseBackend] = useState<any>(null);
+    const [mockBesvarelseBackend, settMockBesvarelseBackend] = useState<any>(props.besvarelse);
     const [endreBesvarelse, settEndreBesvarelse] = useState<boolean>(false);
 
     const onSubmitSkjema = (besvarelse: any) => {
