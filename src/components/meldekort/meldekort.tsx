@@ -47,7 +47,7 @@ function Meldekort(props: Props) {
             borderRadius={'xlarge'}
             borderColor={'border-subtle'}
             borderWidth={'1'}
-            className={'divide-y divide-gray-300'}
+            className={'divide-y divide-gray-300 mb-4'}
         >
             <div className={'pt-4 pb-3 px-5'}>
                 <Heading level="3" size="small">

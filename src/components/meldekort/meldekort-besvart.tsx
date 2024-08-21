@@ -24,7 +24,7 @@ const TEKSTER = {
         alertHeadingUtmeldt: 'Du er ikke lenger registrert som arbeidssøker',
         alertBodyUtmeldt: 'Hvis du ønsker å endre dette må du registrere deg på nytt',
         heading: 'Har du vært i arbeid i perioden',
-        svarteDu: 'svarte du at',
+        svarteDu: 'svarte du at:',
         vaertIArbeid: 'du har vært i arbeid foregående 14 dager',
         ikkeVaertIArbeid: 'du ikke har vært i arbeid foregående 14 dager',
         onskerAaVaereRegistrert: 'at du ønsker å være registrert som arbeidssøker',
@@ -67,18 +67,18 @@ const OenskerAaVaereRegistrert = (props: Props) => {
                 </Alert>
             )}
             <InfoTekst sprak={sprak} />
-            <Heading size={'xsmall'}>
-                {tekst('heading')} {periode}
+            <Heading size={'xsmall'} className={'mb-4'}>
+                {tekst('heading')} <span className={'text-nowrap'}>{periode}?</span>
             </Heading>
-            <div className={'px-6 py-4'}>
+            <div className={'px-4'}>
                 <BesvarelseInfo sprak={sprak} besvarelse={besvarelse} innsendtDato={innsendtDato} />
-                <Button variant={'tertiary'} onClick={onEndreSvar}>
-                    {tekst('buttonText')}
-                </Button>
-                <Heading size={'xsmall'}>
-                    {tekst('nesteGang')} {nesteDato}
-                </Heading>
             </div>
+            <Button variant={'secondary'} onClick={onEndreSvar}>
+                {tekst('buttonText')}
+            </Button>
+            <Heading size={'xsmall'} className={'mt-4'}>
+                {tekst('nesteGang')} {nesteDato}
+            </Heading>
         </>
     );
 };
@@ -95,15 +95,15 @@ const OenskerIkkeAaVaereRegistrert = (props: Props) => {
                 </Alert>
             )}
             {!visBekreftelse && <InfoTekst sprak={sprak} />}
-            <Heading size={'xsmall'}>
-                {tekst('heading')} {periode}
+            <Heading size={'xsmall'} className={'mb-4'}>
+                {tekst('heading')} <span className={'text-nowrap'}>{periode}</span>?
             </Heading>
-            <div className={'px-6 py-4'}>
+            <div className={'px-4'}>
                 <BesvarelseInfo sprak={sprak} besvarelse={besvarelse} innsendtDato={innsendtDato} />
-                <Button variant={'tertiary'} onClick={() => console.log('Jeg ønsker å registrere meg på nytt')}>
-                    {tekst('buttonTextUtmeldt')}
-                </Button>
             </div>
+            <Button variant={'secondary'} onClick={() => console.log('Jeg ønsker å registrere meg på nytt')}>
+                {tekst('buttonTextUtmeldt')}
+            </Button>
         </>
     );
 };

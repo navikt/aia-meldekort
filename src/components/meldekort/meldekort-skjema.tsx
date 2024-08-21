@@ -129,7 +129,7 @@ const MeldekortSkjema = (props: Props) => {
                 {tekst('submit')}
             </Button>
             {visAvbrytKnapp && (
-                <Button className={'ml-4'} variant={'tertiary'} onClick={onCancel}>
+                <Button className={'ml-4'} variant={'secondary'} onClick={onCancel}>
                     {tekst('cancel')}
                 </Button>
             )}
