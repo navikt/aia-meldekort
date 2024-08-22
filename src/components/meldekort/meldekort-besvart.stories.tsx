@@ -21,11 +21,7 @@ export const MeldekortBesvartStory: Story = {
             oenskerAaVaereRegistrert: true,
             dato: '',
         },
-        visBekreftelse: true,
         sprak: 'nb',
-        onEndreSvar() {
-            console.log('onEndreSvar');
-        },
     },
 };
 
@@ -39,10 +35,6 @@ export const MeldekortUtmeldtStory: Story = {
             oenskerAaVaereRegistrert: false,
             dato: '',
         },
-        visBekreftelse: true,
         sprak: 'nb',
-        onEndreSvar() {
-            console.log('onEndreSvar');
-        },
     },
-}
+};

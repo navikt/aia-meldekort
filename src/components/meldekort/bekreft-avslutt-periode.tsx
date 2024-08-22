@@ -1,4 +1,4 @@
-import { BodyLong, Button, Heading } from '@navikt/ds-react';
+import { Alert, Button, Heading } from '@navikt/ds-react';
 import { Sprak } from '../../types/sprak';
 import { lagHentTekstForSprak } from '@navikt/arbeidssokerregisteret-utils';
 
@@ -10,11 +10,9 @@ interface Props {
 
 const TEKSTER = {
     nb: {
-        heading: 'Avslutt arbeidssøkerperiode',
-        body1: 'Du vil ikke lenger bli bedt om å bekrefte arbeidssøkerstatus. ',
-        body2: 'Dersom du ønsker å fortsatt være arbeidssøker må du registrere deg på nytt.',
-        confirm: 'Ja, avslutt',
-        cancel: 'Nei, avbryt',
+        heading: 'Du har svart at du ikke lenger ønsker å være registrert som arbeidssøker',
+        confirm: 'Bekreft svar',
+        cancel: 'Avbryt og gå tilbake',
     },
 };
 
@@ -22,20 +20,19 @@ const BekreftAvsluttPeriode = (props: Props) => {
     const { sprak, onSubmit, onCancel } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     return (
-        <>
-            <Heading size={'xsmall'}>{tekst('heading')}</Heading>
-            <BodyLong className={'my-4'}>
-                {tekst('body1')}
-                <br />
-                {tekst('body2')}
-            </BodyLong>
-            <Button variant={'primary'} onClick={onSubmit}>
-                {tekst('confirm')}
-            </Button>
-            <Button variant={'tertiary'} className={'ml-4'} onClick={onCancel}>
+        <Alert variant={'warning'}>
+            <Heading size={'small'} className={'mb-4'}>
+                {tekst('heading')}
+            </Heading>
+            <div className={'my-4'}>
+                <Button variant={'secondary-neutral'} onClick={onSubmit} className={'w-full'}>
+                    {tekst('confirm')}
+                </Button>
+            </div>
+            <Button variant={'tertiary-neutral'} onClick={onCancel} className={'w-full'}>
                 {tekst('cancel')}
             </Button>
-        </>
+        </Alert>
     );
 };
 

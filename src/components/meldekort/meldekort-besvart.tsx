@@ -1,5 +1,5 @@
 import { lagHentTekstForSprak } from '@navikt/arbeidssokerregisteret-utils';
-import { Alert, BodyLong, BodyShort, Button, Heading, List } from '@navikt/ds-react';
+import { BodyShort, Button, Heading, List } from '@navikt/ds-react';
 import InfoTekst from './info-tekst';
 import { Sprak } from '../../types/sprak';
 
@@ -12,17 +12,11 @@ export interface Props {
         harVaertIArbeid: boolean;
         oenskerAaVaereRegistrert: boolean;
     };
-    visBekreftelse: boolean;
-    onEndreSvar(): void;
     sprak: Sprak;
 }
 
 const TEKSTER = {
     nb: {
-        alertHeading: 'Vi har registrert svaret ditt',
-        alertBody: 'Hvis du ønsker å endre noe kan du sende inn svaret på nytt.',
-        alertHeadingUtmeldt: 'Du er ikke lenger registrert som arbeidssøker',
-        alertBodyUtmeldt: 'Hvis du ønsker å endre dette må du registrere deg på nytt',
         heading: 'Har du vært i arbeid i perioden',
         svarteDu: 'svarte du at:',
         vaertIArbeid: 'du har vært i arbeid foregående 14 dager',
@@ -56,16 +50,10 @@ const BesvarelseInfo = (props: { sprak: Sprak; besvarelse: Props['besvarelse']; 
 };
 
 const OenskerAaVaereRegistrert = (props: Props) => {
-    const { sprak, visBekreftelse, periode, innsendtDato, nesteDato, besvarelse, onEndreSvar } = props;
+    const { sprak, periode, innsendtDato, nesteDato, besvarelse } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     return (
         <>
-            {visBekreftelse && (
-                <Alert variant={'success'} className={'mb-4'}>
-                    <Heading size={'xsmall'}>{tekst('alertHeading')}</Heading>
-                    <BodyLong>{tekst('alertBody')}</BodyLong>
-                </Alert>
-            )}
             <InfoTekst sprak={sprak} />
             <Heading size={'xsmall'} className={'mb-4'}>
                 {tekst('heading')} <span className={'text-nowrap'}>{periode}?</span>
@@ -73,9 +61,6 @@ const OenskerAaVaereRegistrert = (props: Props) => {
             <div className={'px-4'}>
                 <BesvarelseInfo sprak={sprak} besvarelse={besvarelse} innsendtDato={innsendtDato} />
             </div>
-            <Button variant={'secondary'} onClick={onEndreSvar}>
-                {tekst('buttonText')}
-            </Button>
             <Heading size={'xsmall'} className={'mt-4'}>
                 {tekst('nesteGang')} {nesteDato}
             </Heading>
@@ -84,17 +69,11 @@ const OenskerAaVaereRegistrert = (props: Props) => {
 };
 
 const OenskerIkkeAaVaereRegistrert = (props: Props) => {
-    const { sprak, visBekreftelse, periode, innsendtDato, besvarelse } = props;
+    const { sprak, periode, innsendtDato, besvarelse } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     return (
         <>
-            {visBekreftelse && (
-                <Alert variant={'success'} className={'mb-4'}>
-                    <Heading size={'xsmall'}>{tekst('alertHeadingUtmeldt')}</Heading>
-                    <BodyLong>{tekst('alertBodyUtmeldt')}</BodyLong>
-                </Alert>
-            )}
-            {!visBekreftelse && <InfoTekst sprak={sprak} />}
+            {/*{!visBekreftelse && <InfoTekst sprak={sprak} />}*/}
             <Heading size={'xsmall'} className={'mb-4'}>
                 {tekst('heading')} <span className={'text-nowrap'}>{periode}</span>?
             </Heading>

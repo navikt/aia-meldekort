@@ -4,7 +4,7 @@ import { BodyLong } from '@navikt/ds-react';
 const TEKSTER = {
     nb: {
         infoText1: 'Hvis du ønsker å være registrert som arbeidssøker hos NAV må du besvare disse spørsmålene. ',
-        infoText2: 'Informasjonen brukes i arbeidsmarkedsstatistikken.',
+        infoText2: 'Informasjonen brukes også i arbeidsmarkedsstatistikken.',
     },
 };
 
@@ -13,7 +13,6 @@ const InfoTekst = (props: { sprak: Sprak }) => {
     return (
         <BodyLong spacing>
             {tekst('infoText1')}
-            <br />
             {tekst('infoText2')}
         </BodyLong>
     );

@@ -73,7 +73,7 @@ const MeldekortSkjema = (props: Props) => {
         props.onSubmit(skjemaState as any);
     };
 
-    const visAvbrytKnapp = Boolean(besvarelse);
+    // const visAvbrytKnapp = Boolean(besvarelse);
 
     if (visBekreftAvsluttPeriode) {
         return (
@@ -105,6 +105,7 @@ const MeldekortSkjema = (props: Props) => {
                 legend={`${tekst('beenWorking')} ${periode}?`}
                 value={getRadioGroupValue(skjemaState.harVaertIArbeid, Boolean(besvarelse) || harAvbruttUtmelding)}
                 onChange={(e) => settSkjemaState((state) => ({ ...state, harVaertIArbeid: e === 'ja' }))}
+                className={'mb-4'}
             >
                 <Radio value="ja" checked={skjemaState.harVaertIArbeid === true}>
                     {tekst('yes')}
@@ -121,18 +122,17 @@ const MeldekortSkjema = (props: Props) => {
                     Boolean(besvarelse) || harAvbruttUtmelding,
                 )}
                 onChange={(e) => settSkjemaState((state) => ({ ...state, oenskerAaVaereRegistrert: e === 'ja' }))}
+                className={'mb-4'}
             >
                 <Radio value="ja">{tekst('yes')}</Radio>
                 <Radio value="nei">{tekst('no')}</Radio>
             </RadioGroup>
-            <Button variant="primary" className={'mt-4'} disabled={!harGyldigSkjema} onClick={onSubmit}>
+            <Button variant="primary" disabled={!harGyldigSkjema} onClick={onSubmit}>
                 {tekst('submit')}
             </Button>
-            {visAvbrytKnapp && (
-                <Button className={'ml-4'} variant={'secondary'} onClick={onCancel}>
-                    {tekst('cancel')}
-                </Button>
-            )}
+            <Button className={'ml-4'} variant={'tertiary'} onClick={onCancel}>
+                {tekst('cancel')}
+            </Button>
         </>
     );
 };

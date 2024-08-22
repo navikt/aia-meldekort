@@ -5,6 +5,8 @@ describe('Mikrofrontend', () => {
     test('rendrer Mikrofrontend', async () => {
         render(<Mikrofrontend />);
 
-        await expect(await screen.findByText('Vil du fortsatt være arbeidssøker?')).toBeInTheDocument();
+        await expect(
+            await screen.findByText('Bekreft at du fortsatt ønsker å være registrert som arbeidssøker'),
+        ).toBeInTheDocument();
     });
 });
