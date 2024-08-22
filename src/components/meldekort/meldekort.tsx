@@ -42,7 +42,7 @@ function Meldekort(props: Props) {
     const harBesvarelse = Boolean(props.besvarelse);
 
     return (
-        <div className={'py-4 px-6'}>
+        <div className={'p-6'}>
             <Heading level="1" size="medium" className={'mb-6'}>
                 {tekst('heading')}
             </Heading>
