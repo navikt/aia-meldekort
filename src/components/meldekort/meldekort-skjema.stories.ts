@@ -14,8 +14,9 @@ type Story = StoryObj<typeof meta>;
 export const MeldekortSkjemaStory: Story = {
     args: {
         sprak: 'nb',
-        fristDato: '20. april',
-        periode: '21.mars - 6. april',
+        fristDato: '2024-09-09',
+        gjelderFra: '2024-08-24',
+        gjelderTil: '2024-09-03',
         onCancel() {
             console.log('onCancel');
         },

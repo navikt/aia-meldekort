@@ -4,17 +4,14 @@ import InfoTekst from './info-tekst';
 import { Sprak } from '../../types/sprak';
 import { useEffect, useState } from 'react';
 import { BekreftAvsluttPeriode } from './bekreft-avslutt-periode';
+import prettyPrintDato from '../../lib/pretty-print-dato';
 
 export interface Props {
     visIkkeSvartAdvarsel?: 'warning' | 'error';
     sprak: Sprak;
-    besvarelse?: {
-        dato: string;
-        harVaertIArbeid: boolean;
-        oenskerAaVaereRegistrert: boolean;
-    };
     fristDato: string;
-    periode: string;
+    gjelderFra: string;
+    gjelderTil: string;
     onSubmit(data: { harVaertIArbeid: boolean; oenskerAaVaereRegistrert: boolean }): void;
     onCancel(): void;
 }
@@ -38,25 +35,25 @@ interface Skjema {
     oenskerAaVaereRegistrert?: boolean;
 }
 
-const getRadioGroupValue = (skjemVerdi: boolean | undefined, harBesvarelse: boolean) => {
-    if (!harBesvarelse) {
+const getRadioGroupValue = (skjemaVerdi: boolean | undefined) => {
+    if (typeof skjemaVerdi === 'undefined') {
         return;
     }
 
-    return skjemVerdi ? 'ja' : 'nei';
+    return skjemaVerdi ? 'ja' : 'nei';
 };
 
 const MeldekortSkjema = (props: Props) => {
-    const { visIkkeSvartAdvarsel, sprak, fristDato, periode, besvarelse, onCancel } = props;
+    const { visIkkeSvartAdvarsel, sprak, fristDato, gjelderFra, gjelderTil, onCancel } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     const [skjemaState, settSkjemaState] = useState<Skjema>({
-        harVaertIArbeid: besvarelse?.harVaertIArbeid,
-        oenskerAaVaereRegistrert: besvarelse?.oenskerAaVaereRegistrert,
+        harVaertIArbeid: undefined,
+        oenskerAaVaereRegistrert: undefined,
     });
 
     const [harGyldigSkjema, settHarGyldigSkjema] = useState<boolean>(false);
     const [visBekreftAvsluttPeriode, settVisBekreftAvsluttPeriode] = useState<boolean>(false);
-    const [harAvbruttUtmelding, settHarAvbruttUtmelding] = useState<boolean>(false);
+
     useEffect(() => {
         settHarGyldigSkjema(
             Object.values(skjemaState).filter((v) => typeof v !== 'undefined').length ===
@@ -73,20 +70,19 @@ const MeldekortSkjema = (props: Props) => {
         props.onSubmit(skjemaState as any);
     };
 
-    // const visAvbrytKnapp = Boolean(besvarelse);
-
     if (visBekreftAvsluttPeriode) {
         return (
             <BekreftAvsluttPeriode
                 onSubmit={() => props.onSubmit(skjemaState as any)}
                 onCancel={() => {
                     settVisBekreftAvsluttPeriode(false);
-                    settHarAvbruttUtmelding(true);
                 }}
                 sprak={sprak}
             />
         );
     }
+
+    const periode = `${prettyPrintDato(gjelderFra)} - ${prettyPrintDato(gjelderTil)}`;
 
     return (
         <>
@@ -94,8 +90,8 @@ const MeldekortSkjema = (props: Props) => {
                 <Alert variant={visIkkeSvartAdvarsel} className={'mb-4'}>
                     <Heading size={'xsmall'}>{tekst('noReply')}</Heading>
                     <BodyLong>
-                        {tekst('alertText1')} {fristDato}
-                        {tekst('alertText2')} {fristDato}
+                        {tekst('alertText1')} {prettyPrintDato(fristDato)}
+                        {tekst('alertText2')} {prettyPrintDato(fristDato)}
                     </BodyLong>
                 </Alert>
             )}
@@ -103,7 +99,7 @@ const MeldekortSkjema = (props: Props) => {
             <InfoTekst sprak={sprak} />
             <RadioGroup
                 legend={`${tekst('beenWorking')} ${periode}?`}
-                value={getRadioGroupValue(skjemaState.harVaertIArbeid, Boolean(besvarelse) || harAvbruttUtmelding)}
+                value={getRadioGroupValue(skjemaState.harVaertIArbeid)}
                 onChange={(e) => settSkjemaState((state) => ({ ...state, harVaertIArbeid: e === 'ja' }))}
                 className={'mb-4'}
             >
@@ -114,13 +110,9 @@ const MeldekortSkjema = (props: Props) => {
                     {tekst('no')}
                 </Radio>
             </RadioGroup>
-
             <RadioGroup
                 legend={`${tekst('wantToBeRegistered')}`}
-                value={getRadioGroupValue(
-                    skjemaState.oenskerAaVaereRegistrert,
-                    Boolean(besvarelse) || harAvbruttUtmelding,
-                )}
+                value={getRadioGroupValue(skjemaState.oenskerAaVaereRegistrert)}
                 onChange={(e) => settSkjemaState((state) => ({ ...state, oenskerAaVaereRegistrert: e === 'ja' }))}
                 className={'mb-4'}
             >

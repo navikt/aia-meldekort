@@ -5,14 +5,21 @@ import { Sprak } from '../../types/sprak';
 import { useState } from 'react';
 import { MeldekortBesvart } from './meldekort-besvart';
 import { Kvittering } from './kvittering';
+import { sorterEtterEldsteFoerst } from '../../lib/sorter-etter-eldste-foerst';
 
-export interface Props {
+export interface MeldekortProps {
     sprak: Sprak;
-    besvarelse?: {
+    sistInnsendteBekreftelse?: {
         dato: string;
         harVaertIArbeid: boolean;
         oenskerAaVaereRegistrert: boolean;
     };
+    tilgjengeligeBekreftelser?: {
+        gjelderFra: string;
+        gjelderTil: string;
+        bekreftelsesId: string;
+    }[];
+    erAktivArbeidssoker: boolean;
 }
 
 const TEKSTER = {
@@ -21,51 +28,65 @@ const TEKSTER = {
     },
 };
 
-function Meldekort(props: Props) {
+function Meldekort(props: MeldekortProps) {
     const { sprak } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     const [visKvittering, settVisKvittering] = useState<boolean>(false);
-    const [mockBesvarelseBackend, settMockBesvarelseBackend] = useState<any>(props.besvarelse);
-    // const [endreBesvarelse, settEndreBesvarelse] = useState<boolean>(false);
+    const [sisteBesvarelse, settSisteBesvarelse] = useState<any>();
+    const [tilgjengeligeBekreftelser, settTilgjengeligeBekreftelser] = useState(
+        sorterEtterEldsteFoerst(props.tilgjengeligeBekreftelser),
+    );
+
+    const harTilgjengeligeBekreftelser = tilgjengeligeBekreftelser.length > 0;
+    const gjeldendeBekreftelse = tilgjengeligeBekreftelser[0];
 
     const onSubmitSkjema = (besvarelse: any) => {
-        settMockBesvarelseBackend(besvarelse);
+        settSisteBesvarelse(besvarelse);
         settVisKvittering(true);
-        // settEndreBesvarelse(false);
+        // TODO: POST til API
+        if (!besvarelse.oenskerAaVaereRegistrert) {
+            settTilgjengeligeBekreftelser([]);
+        } else {
+            settTilgjengeligeBekreftelser((tilgjengeligeBekreftelser) => tilgjengeligeBekreftelser.slice(1));
+        }
     };
 
     const onCancel = () => {
-        // settHarSendtInnBesvarelse(false);
-        // settEndreBesvarelse(false);
+        // TODO: hva gjør vi her?
     };
-
-    const harBesvarelse = Boolean(props.besvarelse);
 
     return (
         <div className={'py-4'}>
             <Heading level="1" size="medium" className={'mb-6'}>
                 {tekst('heading')}
             </Heading>
-            {harBesvarelse && !visKvittering && (
+            {props.sistInnsendteBekreftelse && !harTilgjengeligeBekreftelser && !visKvittering && (
                 <MeldekortBesvart
                     periode={'21.mars - 6. april'}
                     innsendtDato={'06.03'}
                     nesteDato={'20.04'}
-                    besvarelse={mockBesvarelseBackend}
+                    besvarelse={props.sistInnsendteBekreftelse}
                     sprak={sprak}
                 />
             )}
-            {!harBesvarelse && !visKvittering && (
+            {harTilgjengeligeBekreftelser && !visKvittering && (
                 <MeldekortSkjema
                     sprak={sprak}
-                    fristDato={'20. april'}
-                    periode={'21.mars - 6. april'}
-                    besvarelse={mockBesvarelseBackend}
+                    fristDato={'2024-09-01'}
+                    gjelderFra={gjeldendeBekreftelse!.gjelderFra}
+                    gjelderTil={gjeldendeBekreftelse!.gjelderTil}
                     onSubmit={onSubmitSkjema}
                     onCancel={onCancel}
                 />
             )}
-            {visKvittering && <Kvittering sprak={sprak} erUtmeldt={!mockBesvarelseBackend.oenskerAaVaereRegistrert} />}
+            {visKvittering && (
+                <Kvittering
+                    sprak={sprak}
+                    erUtmeldt={!sisteBesvarelse.oenskerAaVaereRegistrert}
+                    harFlereBekreftelser={tilgjengeligeBekreftelser.length > 0}
+                    onClick={() => settVisKvittering(false)}
+                />
+            )}
         </div>
     );
 }
