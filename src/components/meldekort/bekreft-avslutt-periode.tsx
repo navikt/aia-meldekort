@@ -1,6 +1,7 @@
 import { Alert, Button, Heading } from '@navikt/ds-react';
 import { Sprak } from '../../types/sprak';
 import { lagHentTekstForSprak } from '@navikt/arbeidssokerregisteret-utils';
+import { useState } from 'react';
 
 interface Props {
     onSubmit(): void;
@@ -17,19 +18,27 @@ const TEKSTER = {
 };
 
 const BekreftAvsluttPeriode = (props: Props) => {
-    const { sprak, onSubmit, onCancel } = props;
+    const { sprak, onCancel } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
+    const [senderSkjema, settSenderSkjema] = useState<boolean>(false);
+
+    const onSubmit = async () => {
+        settSenderSkjema(true);
+        await props.onSubmit();
+        settSenderSkjema(false);
+    };
+
     return (
         <Alert variant={'warning'}>
             <Heading size={'small'} className={'mb-4'}>
                 {tekst('heading')}
             </Heading>
             <div className={'my-4'}>
-                <Button variant={'secondary-neutral'} onClick={onSubmit} className={'w-full'}>
+                <Button variant={'secondary-neutral'} onClick={onSubmit} className={'w-full'} disabled={senderSkjema}>
                     {tekst('confirm')}
                 </Button>
             </div>
-            <Button variant={'tertiary-neutral'} onClick={onCancel} className={'w-full'}>
+            <Button variant={'tertiary-neutral'} onClick={onCancel} className={'w-full'} disabled={senderSkjema}>
                 {tekst('cancel')}
             </Button>
         </Alert>

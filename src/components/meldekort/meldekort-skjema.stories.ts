@@ -22,6 +22,7 @@ export const MeldekortSkjemaStory: Story = {
         },
         onSubmit(data) {
             console.log('onSubmit', data);
+            return Promise.resolve();
         },
     },
 };

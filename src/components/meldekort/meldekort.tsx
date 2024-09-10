@@ -7,6 +7,12 @@ import { MeldekortBesvart } from './meldekort-besvart';
 import { Kvittering } from './kvittering';
 import { sorterEtterEldsteFoerst } from '../../lib/sorter-etter-eldste-foerst';
 
+export interface Bekreftelse {
+    harVaertIArbeid: boolean;
+    oenskerAaVaereRegistrert: boolean;
+    bekreftelseId: string;
+}
+
 export interface MeldekortProps {
     sprak: Sprak;
     sistInnsendteBekreftelse?: {
@@ -17,9 +23,10 @@ export interface MeldekortProps {
     tilgjengeligeBekreftelser?: {
         gjelderFra: string;
         gjelderTil: string;
-        bekreftelsesId: string;
+        bekreftelseId: string;
     }[];
     erAktivArbeidssoker: boolean;
+    onSubmit(data: Bekreftelse): Promise<void>;
 }
 
 const TEKSTER = {
@@ -29,7 +36,7 @@ const TEKSTER = {
 };
 
 function Meldekort(props: MeldekortProps) {
-    const { sprak } = props;
+    const { sprak, onSubmit } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     const [visKvittering, settVisKvittering] = useState<boolean>(false);
     const [sisteBesvarelse, settSisteBesvarelse] = useState<any>();
@@ -40,14 +47,18 @@ function Meldekort(props: MeldekortProps) {
     const harTilgjengeligeBekreftelser = tilgjengeligeBekreftelser.length > 0;
     const gjeldendeBekreftelse = tilgjengeligeBekreftelser[0];
 
-    const onSubmitSkjema = (besvarelse: any) => {
-        settSisteBesvarelse(besvarelse);
-        settVisKvittering(true);
-        // TODO: POST til API
-        if (!besvarelse.oenskerAaVaereRegistrert) {
-            settTilgjengeligeBekreftelser([]);
-        } else {
-            settTilgjengeligeBekreftelser((tilgjengeligeBekreftelser) => tilgjengeligeBekreftelser.slice(1));
+    const onSubmitSkjema = async (bekreftelse: Bekreftelse) => {
+        try {
+            await onSubmit(bekreftelse);
+            settSisteBesvarelse(bekreftelse);
+            settVisKvittering(true);
+            if (!bekreftelse.oenskerAaVaereRegistrert) {
+                settTilgjengeligeBekreftelser([]);
+            } else {
+                settTilgjengeligeBekreftelser((tilgjengeligeBekreftelser) => tilgjengeligeBekreftelser.slice(1));
+            }
+        } catch (err: any) {
+            console.error(err);
         }
     };
 

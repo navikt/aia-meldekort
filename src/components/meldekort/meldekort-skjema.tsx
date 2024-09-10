@@ -12,7 +12,7 @@ export interface Props {
     fristDato: string;
     gjelderFra: string;
     gjelderTil: string;
-    onSubmit(data: { harVaertIArbeid: boolean; oenskerAaVaereRegistrert: boolean }): void;
+    onSubmit(data: { harVaertIArbeid: boolean; oenskerAaVaereRegistrert: boolean }): Promise<void>;
     onCancel(): void;
 }
 
@@ -53,6 +53,7 @@ const MeldekortSkjema = (props: Props) => {
 
     const [harGyldigSkjema, settHarGyldigSkjema] = useState<boolean>(false);
     const [visBekreftAvsluttPeriode, settVisBekreftAvsluttPeriode] = useState<boolean>(false);
+    const [senderSkjema, settSenderSkjema] = useState<boolean>(false);
 
     useEffect(() => {
         settHarGyldigSkjema(
@@ -61,13 +62,15 @@ const MeldekortSkjema = (props: Props) => {
         );
     }, [skjemaState]);
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         if (!skjemaState.oenskerAaVaereRegistrert) {
             settVisBekreftAvsluttPeriode(true);
             return;
         }
 
-        props.onSubmit(skjemaState as any);
+        settSenderSkjema(true);
+        await props.onSubmit(skjemaState as any);
+        settSenderSkjema(false);
     };
 
     if (visBekreftAvsluttPeriode) {
@@ -119,10 +122,10 @@ const MeldekortSkjema = (props: Props) => {
                 <Radio value="ja">{tekst('yes')}</Radio>
                 <Radio value="nei">{tekst('no')}</Radio>
             </RadioGroup>
-            <Button variant="primary" disabled={!harGyldigSkjema} onClick={onSubmit}>
+            <Button variant="primary" disabled={!harGyldigSkjema} onClick={onSubmit} loading={senderSkjema}>
                 {tekst('submit')}
             </Button>
-            <Button className={'ml-4'} variant={'tertiary'} onClick={onCancel}>
+            <Button className={'ml-4'} variant={'tertiary'} onClick={onCancel} disabled={senderSkjema}>
                 {tekst('cancel')}
             </Button>
         </>

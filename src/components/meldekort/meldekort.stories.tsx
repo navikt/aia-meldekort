@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Meldekort } from './meldekort';
+import { Bekreftelse, Meldekort } from './meldekort';
 
 const meta = {
     title: 'Meldekort',
@@ -20,13 +20,21 @@ export const MeldekortStory: Story = {
             {
                 gjelderFra: '2024-08-01',
                 gjelderTil: '2024-08-15',
-                bekreftelsesId: '42',
+                bekreftelseId: '42',
             },
             {
                 gjelderFra: '2024-07-15',
                 gjelderTil: '2024-07-31',
-                bekreftelsesId: '41',
+                bekreftelseId: '41',
             },
         ],
+        onSubmit(data: Bekreftelse): Promise<void> {
+            console.log('onSubmit', data);
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, 1000);
+            });
+        },
     },
 };

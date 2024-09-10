@@ -8,6 +8,7 @@ function Mikrofrontend() {
             sistInnsendteBekreftelse={undefined}
             tilgjengeligeBekreftelser={undefined}
             erAktivArbeidssoker={true}
+            onSubmit={() => Promise.resolve()}
         />
     );
 }
