@@ -6,12 +6,7 @@ import { useState } from 'react';
 import { MeldekortBesvart } from './meldekort-besvart';
 import { Kvittering } from './kvittering';
 import { sorterEtterEldsteFoerst } from '../../lib/sorter-etter-eldste-foerst';
-
-export interface Bekreftelse {
-    harVaertIArbeid: boolean;
-    oenskerAaVaereRegistrert: boolean;
-    bekreftelseId: string;
-}
+import { Bekreftelse } from '../../types/bekreftelse';
 
 export interface MeldekortProps {
     sprak: Sprak;
