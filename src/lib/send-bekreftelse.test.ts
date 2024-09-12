@@ -19,7 +19,7 @@ describe('sendBekreftelse', () => {
                 return HttpResponse.json({ test: 'ok' });
             }),
         );
-        console.log(BEKREFTELSE_URL);
+
         const payload = {
             harVaertIArbeid: true,
             oenskerAaVaereRegistrert: true,
