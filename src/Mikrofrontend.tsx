@@ -6,6 +6,8 @@ import { ARBEIDSOKERPERIODER_URL, SISTE_INNSENDTE_BEKREFTELSE, TILGJENGELIGE_BEK
 import fetcher from './lib/http';
 import { hentSisteArbeidssokerPeriode } from '@navikt/arbeidssokerregisteret-utils';
 import { sendBekreftelse } from './lib/send-bekreftelse';
+import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorBoundaryFeil } from './components/feil/error-boundary-feil';
 
 function DataLoaderWrapper() {
     const [fetchSisteInnsendte, settFetchSisteInnsendte] = useState<boolean>(false);
@@ -53,9 +55,11 @@ function DataLoaderWrapper() {
 
 function Mikrofrontend() {
     return (
-        <Suspense>
-            <DataLoaderWrapper />
-        </Suspense>
+        <ErrorBoundary FallbackComponent={ErrorBoundaryFeil}>
+            <Suspense>
+                <DataLoaderWrapper />
+            </Suspense>
+        </ErrorBoundary>
     );
 }
 
