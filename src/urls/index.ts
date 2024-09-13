@@ -19,4 +19,11 @@ const AIA_BACKEND_URL = {
     production: 'https://www.nav.no/aia-backend',
 };
 
+const REGISTRER_ARBEIDSSOKER_URL = {
+    local: 'https://arbeid.intern.dev.nav.no/arbeid/registrering',
+    development: 'https://arbeid.intern.dev.nav.no/arbeid/registrering',
+    production: 'https://www.nav.no/arbeid/registrering',
+};
+
 export const aiaBackendUrl = AIA_BACKEND_URL[getEnvironment()];
+export const registrerArbeidssokerUrl = REGISTRER_ARBEIDSSOKER_URL[getEnvironment()];

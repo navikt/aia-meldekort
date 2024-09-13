@@ -7,6 +7,7 @@ import { MeldekortBesvart } from './meldekort-besvart';
 import { Kvittering } from './kvittering';
 import { sorterEtterEldsteFoerst } from '../../lib/sorter-etter-eldste-foerst';
 import { Bekreftelse } from '../../types/bekreftelse';
+import { MeldekortUtmeldt } from './meldekort-utmeldt';
 
 export interface MeldekortProps {
     sprak: Sprak;
@@ -31,7 +32,7 @@ const TEKSTER = {
 };
 
 function Meldekort(props: MeldekortProps) {
-    const { sprak, onSubmit } = props;
+    const { sprak, onSubmit, erAktivArbeidssoker } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     const [visKvittering, settVisKvittering] = useState<boolean>(false);
     const [sisteBesvarelse, settSisteBesvarelse] = useState<any>();
@@ -60,6 +61,10 @@ function Meldekort(props: MeldekortProps) {
     const onCancel = () => {
         // TODO: hva gjør vi her?
     };
+
+    if (!erAktivArbeidssoker) {
+        return <MeldekortUtmeldt sprak={sprak} />;
+    }
 
     return (
         <div className={'py-4'}>
