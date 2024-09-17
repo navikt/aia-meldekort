@@ -6,13 +6,18 @@ import { useEffect, useState } from 'react';
 import { BekreftAvsluttPeriode } from './bekreft-avslutt-periode';
 import prettyPrintDato from '../../lib/pretty-print-dato';
 
+interface Skjema {
+    harJobbetIDennePerioden?: boolean;
+    vilFortsetteSomArbeidssoeker?: boolean;
+}
+
 export interface Props {
     visIkkeSvartAdvarsel?: 'warning' | 'error';
     sprak: Sprak;
     fristDato: string;
     gjelderFra: string;
     gjelderTil: string;
-    onSubmit(data: { harVaertIArbeid: boolean; oenskerAaVaereRegistrert: boolean }): Promise<void>;
+    onSubmit(data: Skjema): Promise<void>;
     onCancel(): void;
 }
 
@@ -30,11 +35,6 @@ const TEKSTER = {
     },
 };
 
-interface Skjema {
-    harVaertIArbeid?: boolean;
-    oenskerAaVaereRegistrert?: boolean;
-}
-
 const getRadioGroupValue = (skjemaVerdi: boolean | undefined) => {
     if (typeof skjemaVerdi === 'undefined') {
         return;
@@ -47,8 +47,8 @@ const MeldekortSkjema = (props: Props) => {
     const { visIkkeSvartAdvarsel, sprak, fristDato, gjelderFra, gjelderTil, onCancel } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     const [skjemaState, settSkjemaState] = useState<Skjema>({
-        harVaertIArbeid: undefined,
-        oenskerAaVaereRegistrert: undefined,
+        harJobbetIDennePerioden: undefined,
+        vilFortsetteSomArbeidssoeker: undefined,
     });
 
     const [harGyldigSkjema, settHarGyldigSkjema] = useState<boolean>(false);
@@ -63,7 +63,7 @@ const MeldekortSkjema = (props: Props) => {
     }, [skjemaState]);
 
     const onSubmit = async () => {
-        if (!skjemaState.oenskerAaVaereRegistrert) {
+        if (!skjemaState.vilFortsetteSomArbeidssoeker) {
             settVisBekreftAvsluttPeriode(true);
             return;
         }
@@ -102,21 +102,21 @@ const MeldekortSkjema = (props: Props) => {
             <InfoTekst sprak={sprak} />
             <RadioGroup
                 legend={`${tekst('beenWorking')} ${periode}?`}
-                value={getRadioGroupValue(skjemaState.harVaertIArbeid)}
-                onChange={(e) => settSkjemaState((state) => ({ ...state, harVaertIArbeid: e === 'ja' }))}
+                value={getRadioGroupValue(skjemaState.harJobbetIDennePerioden)}
+                onChange={(e) => settSkjemaState((state) => ({ ...state, harJobbetIDennePerioden: e === 'ja' }))}
                 className={'mb-4'}
             >
-                <Radio value="ja" checked={skjemaState.harVaertIArbeid === true}>
+                <Radio value="ja" checked={skjemaState.harJobbetIDennePerioden === true}>
                     {tekst('yes')}
                 </Radio>
-                <Radio value="nei" checked={skjemaState.harVaertIArbeid === false}>
+                <Radio value="nei" checked={skjemaState.harJobbetIDennePerioden === false}>
                     {tekst('no')}
                 </Radio>
             </RadioGroup>
             <RadioGroup
                 legend={`${tekst('wantToBeRegistered')}`}
-                value={getRadioGroupValue(skjemaState.oenskerAaVaereRegistrert)}
-                onChange={(e) => settSkjemaState((state) => ({ ...state, oenskerAaVaereRegistrert: e === 'ja' }))}
+                value={getRadioGroupValue(skjemaState.vilFortsetteSomArbeidssoeker)}
+                onChange={(e) => settSkjemaState((state) => ({ ...state, vilFortsetteSomArbeidssoeker: e === 'ja' }))}
                 className={'mb-4'}
             >
                 <Radio value="ja">{tekst('yes')}</Radio>

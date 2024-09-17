@@ -6,21 +6,13 @@ import { useState } from 'react';
 import { MeldekortBesvart } from './meldekort-besvart';
 import { Kvittering } from './kvittering';
 import { sorterEtterEldsteFoerst } from '../../lib/sorter-etter-eldste-foerst';
-import { Bekreftelse } from '../../types/bekreftelse';
+import { Bekreftelse, SistInnsendteBekreftelse, TilgjengeligeBekreftelser } from '../../types/bekreftelse';
 import { MeldekortUtmeldt } from './meldekort-utmeldt';
 
 export interface MeldekortProps {
     sprak: Sprak;
-    sistInnsendteBekreftelse?: {
-        dato: string;
-        harVaertIArbeid: boolean;
-        oenskerAaVaereRegistrert: boolean;
-    };
-    tilgjengeligeBekreftelser?: {
-        gjelderFra: string;
-        gjelderTil: string;
-        bekreftelseId: string;
-    }[];
+    sistInnsendteBekreftelse?: SistInnsendteBekreftelse;
+    tilgjengeligeBekreftelser?: TilgjengeligeBekreftelser;
     erAktivArbeidssoker: boolean;
     onSubmit(data: Bekreftelse): Promise<void>;
 }
@@ -48,7 +40,7 @@ function Meldekort(props: MeldekortProps) {
             await onSubmit(bekreftelse);
             settSisteBesvarelse(bekreftelse);
             settVisKvittering(true);
-            if (!bekreftelse.oenskerAaVaereRegistrert) {
+            if (!bekreftelse.vilFortsetteSomArbeidssoeker) {
                 settTilgjengeligeBekreftelser([]);
             } else {
                 settTilgjengeligeBekreftelser((tilgjengeligeBekreftelser) => tilgjengeligeBekreftelser.slice(1));

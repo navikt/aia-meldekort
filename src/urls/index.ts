@@ -25,5 +25,12 @@ const REGISTRER_ARBEIDSSOKER_URL = {
     production: 'https://www.nav.no/arbeid/registrering',
 };
 
+const BEKREFTELSE_API_URL = {
+    local: 'http://localhost:3000/bekreftelse',
+    development: 'https://bekreftelse-arbeidssoekerregisteret.intern.dev.nav.no',
+    production: 'https://bekreftelse-arbeidssoekerregisteret.intern.nav.no',
+};
+
 export const aiaBackendUrl = AIA_BACKEND_URL[getEnvironment()];
 export const registrerArbeidssokerUrl = REGISTRER_ARBEIDSSOKER_URL[getEnvironment()];
+export const bekreftelseApiUrl = BEKREFTELSE_API_URL[getEnvironment()];

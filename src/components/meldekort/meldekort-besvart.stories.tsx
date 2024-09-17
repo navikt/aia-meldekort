@@ -17,8 +17,8 @@ export const MeldekortBesvartStory: Story = {
         innsendtDato: '06.03',
         nesteDato: '20.04',
         besvarelse: {
-            harVaertIArbeid: true,
-            oenskerAaVaereRegistrert: true,
+            harJobbetIDennePerioden: true,
+            vilFortsetteSomArbeidssoeker: true,
             dato: '',
         },
         sprak: 'nb',
@@ -31,8 +31,8 @@ export const MeldekortUtmeldtStory: Story = {
         innsendtDato: '06.03',
         nesteDato: '20.04',
         besvarelse: {
-            harVaertIArbeid: true,
-            oenskerAaVaereRegistrert: false,
+            harJobbetIDennePerioden: true,
+            vilFortsetteSomArbeidssoeker: false,
             dato: '',
         },
         sprak: 'nb',

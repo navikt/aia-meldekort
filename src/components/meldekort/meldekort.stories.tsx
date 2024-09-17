@@ -22,11 +22,13 @@ export const MeldekortStory: Story = {
                 gjelderFra: '2024-08-01',
                 gjelderTil: '2024-08-15',
                 bekreftelseId: '42',
+                periodeId: '1',
             },
             {
                 gjelderFra: '2024-07-15',
                 gjelderTil: '2024-07-31',
                 bekreftelseId: '41',
+                periodeId: '2',
             },
         ],
         onSubmit(data: Bekreftelse): Promise<void> {

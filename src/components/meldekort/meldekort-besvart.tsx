@@ -2,16 +2,13 @@ import { lagHentTekstForSprak } from '@navikt/arbeidssokerregisteret-utils';
 import { BodyShort, Button, Heading, List } from '@navikt/ds-react';
 import InfoTekst from './info-tekst';
 import { Sprak } from '../../types/sprak';
+import { SistInnsendteBekreftelse } from '../../types/bekreftelse';
 
 export interface Props {
     periode: string;
     innsendtDato: string;
     nesteDato: string;
-    besvarelse: {
-        dato: string;
-        harVaertIArbeid: boolean;
-        oenskerAaVaereRegistrert: boolean;
-    };
+    besvarelse: SistInnsendteBekreftelse;
     sprak: Sprak;
 }
 
@@ -38,10 +35,12 @@ const BesvarelseInfo = (props: { sprak: Sprak; besvarelse: Props['besvarelse']; 
                 {innsendtDato} {tekst('svarteDu')}
             </BodyShort>
             <List size={'small'}>
-                <List.Item>{tekst(besvarelse.harVaertIArbeid ? 'vaertIArbeid' : 'ikkeVaertIArbeid')}</List.Item>
+                <List.Item>{tekst(besvarelse.harJobbetIDennePerioden ? 'vaertIArbeid' : 'ikkeVaertIArbeid')}</List.Item>
                 <List.Item>
                     {tekst(
-                        besvarelse.oenskerAaVaereRegistrert ? 'onskerAaVaereRegistrert' : 'onskerIkkeAaVaereRegistrert',
+                        besvarelse.vilFortsetteSomArbeidssoeker
+                            ? 'onskerAaVaereRegistrert'
+                            : 'onskerIkkeAaVaereRegistrert',
                     )}
                 </List.Item>
             </List>
@@ -90,7 +89,7 @@ const OenskerIkkeAaVaereRegistrert = (props: Props) => {
 export const MeldekortBesvart = (props: Props) => {
     const { besvarelse } = props;
 
-    return besvarelse.oenskerAaVaereRegistrert ? (
+    return besvarelse.vilFortsetteSomArbeidssoeker ? (
         <OenskerAaVaereRegistrert {...props} />
     ) : (
         <OenskerIkkeAaVaereRegistrert {...props} />
