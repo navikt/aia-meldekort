@@ -8,6 +8,7 @@ import { hentSisteArbeidssokerPeriode } from '@navikt/arbeidssokerregisteret-uti
 import { sendBekreftelse } from './lib/send-bekreftelse';
 import { ErrorBoundary } from 'react-error-boundary';
 import { ErrorBoundaryFeil } from './components/feil/error-boundary-feil';
+import { initAmplitude } from './lib/amplitude';
 
 function DataLoaderWrapper() {
     const [fetchSisteInnsendte, settFetchSisteInnsendte] = useState<boolean>(false);
@@ -54,6 +55,10 @@ function DataLoaderWrapper() {
 }
 
 function Mikrofrontend() {
+    useEffect(() => {
+        initAmplitude();
+    }, []);
+
     return (
         <ErrorBoundary FallbackComponent={ErrorBoundaryFeil}>
             <Suspense>

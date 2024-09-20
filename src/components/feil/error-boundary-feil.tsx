@@ -1,13 +1,13 @@
 import { Alert } from '@navikt/ds-react';
 import { FallbackProps } from 'react-error-boundary';
 import { useEffect } from 'react';
+import { loggVisning } from '../../lib/amplitude';
 
 export const ErrorBoundaryFeil = (props: FallbackProps) => {
     const { error } = props;
 
     useEffect(() => {
-        // TODO: loggVisning({ viser: 'ErrorBoundaryFeil', error: error?.message });
-        console.error('ErrorBoundaryFeil', error);
+        loggVisning({ viser: 'ErrorBoundaryFeil', error: error?.message });
     }, []);
 
     return <Alert variant={'error'}>Noe gikk dessverre galt</Alert>;

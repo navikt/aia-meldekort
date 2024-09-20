@@ -63,6 +63,7 @@
         "vitest": "2.0.5"
     },
     "dependencies": {
+        "@amplitude/analytics-browser": "2.11.6",
         "@navikt/aksel-icons": "6.16.0",
         "@navikt/arbeidssokerregisteret-utils": "1.0.0",
         "@navikt/ds-react": "6.16.0",

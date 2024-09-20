@@ -2,6 +2,8 @@ import { Sprak } from '../../types/sprak';
 import { Button, Heading } from '@navikt/ds-react';
 import { lagHentTekstForSprak } from '@navikt/arbeidssokerregisteret-utils';
 import { registrerArbeidssokerUrl } from '../../urls';
+import { useEffect } from 'react';
+import { loggAktivitet, loggVisning } from '../../lib/amplitude';
 
 interface Props {
     sprak: Sprak;
@@ -16,9 +18,13 @@ const MeldekortUtmeldt = (props: Props) => {
     const { sprak } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     const onClick = () => {
-        // TODO: amplitude logging
+        loggAktivitet({ aktivitet: 'Trykker på "Jeg ønsker å registrere meg på nytt"' });
         window.location.href = registrerArbeidssokerUrl;
     };
+
+    useEffect(() => {
+        loggVisning({ viser: 'IkkeAktivArbeidssøker' });
+    }, []);
 
     return (
         <div className={'py-4'}>
