@@ -5,6 +5,7 @@ import { Sprak } from '../../types/sprak';
 import { useEffect, useState } from 'react';
 import { BekreftAvsluttPeriode } from './bekreft-avslutt-periode';
 import prettyPrintDato from '../../lib/pretty-print-dato';
+import { loggAktivitet } from '../../lib/amplitude';
 
 interface Skjema {
     harJobbetIDennePerioden?: boolean;
@@ -79,6 +80,7 @@ const MeldekortSkjema = (props: Props) => {
                 onSubmit={() => props.onSubmit(skjemaState as any)}
                 onCancel={() => {
                     settVisBekreftAvsluttPeriode(false);
+                    loggAktivitet({ aktivitet: 'Avbryter avslutning av periode' });
                 }}
                 sprak={sprak}
             />

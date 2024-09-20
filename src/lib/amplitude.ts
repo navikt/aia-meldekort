@@ -30,10 +30,16 @@ export const initAmplitude = async () => {
     }
 };
 
-export type VisningsData = { viser: 'IkkeAktivArbeidssøker' } | { viser: 'ErrorBoundaryFeil'; error: any };
+export type VisningsData =
+    | { viser: 'IkkeAktivArbeidssøker' }
+    | { viser: 'Bekreftelse'; antallTilgjengeligeBekreftelser: number; erAktivArbeidssoker: boolean }
+    | { viser: 'ErrorBoundaryFeil'; error: any };
 
 type AktivitetData =
-    | { aktivitet: 'Trykker på "Registrer arbeidssøker lenke' }
+    | { aktivitet: 'Sender inn bekreftelse'; vilFortsetteSomArbeidssoeker: boolean }
+    | { aktivitet: 'Avbryter avslutning av periode' }
+    | { aktivitet: 'Trykker på "Bekreft neste periode"' }
+    | { aktivitet: 'Trykker på "Gå tilbake til min side" fra kvittering' }
     | { aktivitet: 'Trykker på "Jeg ønsker å registrere meg på nytt"' };
 
 type EventData = VisningsData | AktivitetData;

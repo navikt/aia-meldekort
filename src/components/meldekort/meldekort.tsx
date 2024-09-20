@@ -2,12 +2,13 @@ import { Heading } from '@navikt/ds-react';
 import { lagHentTekstForSprak } from '@navikt/arbeidssokerregisteret-utils';
 import { MeldekortSkjema } from './meldekort-skjema';
 import { Sprak } from '../../types/sprak';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MeldekortBesvart } from './meldekort-besvart';
 import { Kvittering } from './kvittering';
 import { sorterEtterEldsteFoerst } from '../../lib/sorter-etter-eldste-foerst';
 import { Bekreftelse, SistInnsendteBekreftelse, TilgjengeligeBekreftelser } from '../../types/bekreftelse';
 import { MeldekortUtmeldt } from './meldekort-utmeldt';
+import { loggAktivitet, loggVisning } from '../../lib/amplitude';
 
 export interface MeldekortProps {
     sprak: Sprak;
@@ -27,7 +28,7 @@ function Meldekort(props: MeldekortProps) {
     const { sprak, onSubmit, erAktivArbeidssoker } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     const [visKvittering, settVisKvittering] = useState<boolean>(false);
-    const [sisteBesvarelse, settSisteBesvarelse] = useState<any>();
+    const [sisteBekreftlse, settSisteBekreftlse] = useState<Bekreftelse>();
     const [tilgjengeligeBekreftelser, settTilgjengeligeBekreftelser] = useState(
         sorterEtterEldsteFoerst(props.tilgjengeligeBekreftelser),
     );
@@ -36,23 +37,31 @@ function Meldekort(props: MeldekortProps) {
     const gjeldendeBekreftelse = tilgjengeligeBekreftelser[0];
 
     const onSubmitSkjema = async (bekreftelse: Bekreftelse) => {
-        try {
-            await onSubmit(bekreftelse);
-            settSisteBesvarelse(bekreftelse);
-            settVisKvittering(true);
-            if (!bekreftelse.vilFortsetteSomArbeidssoeker) {
-                settTilgjengeligeBekreftelser([]);
-            } else {
-                settTilgjengeligeBekreftelser((tilgjengeligeBekreftelser) => tilgjengeligeBekreftelser.slice(1));
-            }
-        } catch (err: any) {
-            console.error(err);
+        await onSubmit(bekreftelse);
+        settSisteBekreftlse(bekreftelse);
+        settVisKvittering(true);
+        if (!bekreftelse.vilFortsetteSomArbeidssoeker) {
+            settTilgjengeligeBekreftelser([]);
+        } else {
+            settTilgjengeligeBekreftelser((tilgjengeligeBekreftelser) => tilgjengeligeBekreftelser.slice(1));
         }
+        loggAktivitet({
+            aktivitet: 'Sender inn bekreftelse',
+            vilFortsetteSomArbeidssoeker: bekreftelse.vilFortsetteSomArbeidssoeker,
+        });
     };
 
     const onCancel = () => {
         // TODO: hva gjør vi her?
     };
+
+    useEffect(() => {
+        loggVisning({
+            viser: 'Bekreftelse',
+            antallTilgjengeligeBekreftelser: tilgjengeligeBekreftelser?.length,
+            erAktivArbeidssoker: erAktivArbeidssoker,
+        });
+    }, []);
 
     if (!erAktivArbeidssoker) {
         return <MeldekortUtmeldt sprak={sprak} />;
@@ -85,9 +94,12 @@ function Meldekort(props: MeldekortProps) {
             {visKvittering && (
                 <Kvittering
                     sprak={sprak}
-                    erUtmeldt={!sisteBesvarelse.oenskerAaVaereRegistrert}
+                    erUtmeldt={!sisteBekreftlse?.vilFortsetteSomArbeidssoeker}
                     harFlereBekreftelser={tilgjengeligeBekreftelser.length > 0}
-                    onClick={() => settVisKvittering(false)}
+                    onClick={() => {
+                        settVisKvittering(false);
+                        loggAktivitet({ aktivitet: 'Trykker på "Bekreft neste periode"' });
+                    }}
                 />
             )}
         </div>

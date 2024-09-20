@@ -1,6 +1,7 @@
 import { Alert, BodyLong, Button, Heading, Link } from '@navikt/ds-react';
 import { lagHentTekstForSprak } from '@navikt/arbeidssokerregisteret-utils';
 import { Sprak } from '../../types/sprak';
+import { loggAktivitet } from '../../lib/amplitude';
 
 export interface Props {
     sprak: Sprak;
@@ -24,6 +25,10 @@ const Kvittering = (props: Props) => {
     const { sprak, erUtmeldt, harFlereBekreftelser, onClick } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
 
+    const loggKlikk = () => {
+        loggAktivitet({ aktivitet: 'Trykker på "Gå tilbake til min side" fra kvittering' });
+    };
+
     return (
         <>
             {erUtmeldt ? (
@@ -42,7 +47,9 @@ const Kvittering = (props: Props) => {
                     {tekst('buttonText')}
                 </Button>
             ) : (
-                <Link href={`${location.origin}/minside`}>{tekst('linkText')}</Link>
+                <Link href={`${location.origin}/minside`} onClick={loggKlikk}>
+                    {tekst('linkText')}
+                </Link>
             )}
         </>
     );
