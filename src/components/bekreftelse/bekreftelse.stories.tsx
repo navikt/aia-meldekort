@@ -3,7 +3,7 @@ import { Bekreftelse } from './bekreftelse';
 import { BekreftelseType } from '../../types/bekreftelse';
 
 const meta = {
-    title: 'Meldekort',
+    title: 'Bekreftelse',
     component: Bekreftelse,
     tags: ['autodocs'],
     args: {},
@@ -12,7 +12,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const MeldekortStory: Story = {
+export const BekreftelseStory: Story = {
     args: {
         sprak: 'nb',
         erAktivArbeidssoker: true,

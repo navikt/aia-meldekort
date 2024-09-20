@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { BekreftelseSkjema } from './bekreftelse-skjema';
 
 const meta = {
-    title: 'Komponenter/Meldekort skjema',
+    title: 'Komponenter/Bekreftelse skjema',
     component: BekreftelseSkjema,
     tags: ['autodocs'],
     args: {},
@@ -11,7 +11,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const MeldekortSkjemaStory: Story = {
+export const BekreftelseSkjemaStory: Story = {
     args: {
         sprak: 'nb',
         fristDato: '2024-09-09',

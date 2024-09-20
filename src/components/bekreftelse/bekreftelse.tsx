@@ -10,7 +10,7 @@ import { BekreftelseType, SistInnsendteBekreftelse, TilgjengeligeBekreftelser } 
 import { IkkeAktivArbeidssoker } from './ikke-aktiv-arbeidssoker';
 import { loggAktivitet, loggVisning } from '../../lib/amplitude';
 
-export interface MeldekortProps {
+export interface BekreftelseProps {
     sprak: Sprak;
     sistInnsendteBekreftelse?: SistInnsendteBekreftelse;
     tilgjengeligeBekreftelser?: TilgjengeligeBekreftelser;
@@ -24,7 +24,7 @@ const TEKSTER = {
     },
 };
 
-function Bekreftelse(props: MeldekortProps) {
+function Bekreftelse(props: BekreftelseProps) {
     const { sprak, onSubmit, erAktivArbeidssoker } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     const [visKvittering, settVisKvittering] = useState<boolean>(false);

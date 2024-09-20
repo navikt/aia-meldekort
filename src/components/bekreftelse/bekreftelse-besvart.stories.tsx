@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { BekreftelseBesvart } from './bekreftelse-besvart';
 
 const meta = {
-    title: 'Komponenter/Meldekort besvart',
+    title: 'Komponenter/Bekreftelse besvart',
     component: BekreftelseBesvart,
     tags: ['autodocs'],
     args: {},
@@ -11,7 +11,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const MeldekortBesvartStory: Story = {
+export const BekreftelseBesvartStory: Story = {
     args: {
         periode: '21. mars - 6. april',
         innsendtDato: '06.03',
@@ -25,7 +25,7 @@ export const MeldekortBesvartStory: Story = {
     },
 };
 
-export const MeldekortUtmeldtStory: Story = {
+export const BekreftelseUtmeldtStory: Story = {
     args: {
         periode: '21. mars - 6. april',
         innsendtDato: '06.03',
