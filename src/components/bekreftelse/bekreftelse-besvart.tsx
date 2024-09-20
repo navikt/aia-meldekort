@@ -86,7 +86,7 @@ const OenskerIkkeAaVaereRegistrert = (props: Props) => {
     );
 };
 
-export const MeldekortBesvart = (props: Props) => {
+export const BekreftelseBesvart = (props: Props) => {
     const { besvarelse } = props;
 
     return besvarelse.vilFortsetteSomArbeidssoeker ? (

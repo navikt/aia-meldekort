@@ -14,7 +14,8 @@ const TEKSTER = {
         buttonText: 'Jeg ønsker å registrere meg på nytt',
     },
 };
-const MeldekortUtmeldt = (props: Props) => {
+
+const IkkeAktivArbeidssoker = (props: Props) => {
     const { sprak } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     const onClick = () => {
@@ -38,4 +39,4 @@ const MeldekortUtmeldt = (props: Props) => {
     );
 };
 
-export { MeldekortUtmeldt };
+export { IkkeAktivArbeidssoker };

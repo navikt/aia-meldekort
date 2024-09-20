@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { MeldekortSkjema } from './meldekort-skjema';
+import { BekreftelseSkjema } from './bekreftelse-skjema';
 
 const meta = {
     title: 'Komponenter/Meldekort skjema',
-    component: MeldekortSkjema,
+    component: BekreftelseSkjema,
     tags: ['autodocs'],
     args: {},
-} satisfies Meta<typeof MeldekortSkjema>;
+} satisfies Meta<typeof BekreftelseSkjema>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

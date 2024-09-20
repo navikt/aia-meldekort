@@ -1,6 +1,6 @@
-import { MeldekortProps } from '../components/meldekort/meldekort';
+import { TilgjengeligeBekreftelser } from '../types/bekreftelse';
 
-export function sorterEtterEldsteFoerst(tilgjengeligeBekreftelser: MeldekortProps['tilgjengeligeBekreftelser']) {
+export function sorterEtterEldsteFoerst(tilgjengeligeBekreftelser?: TilgjengeligeBekreftelser) {
     if (!tilgjengeligeBekreftelser || tilgjengeligeBekreftelser.length === 0) {
         return [];
     }

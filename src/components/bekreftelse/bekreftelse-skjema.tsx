@@ -44,7 +44,7 @@ const getRadioGroupValue = (skjemaVerdi: boolean | undefined) => {
     return skjemaVerdi ? 'ja' : 'nei';
 };
 
-const MeldekortSkjema = (props: Props) => {
+const BekreftelseSkjema = (props: Props) => {
     const { visIkkeSvartAdvarsel, sprak, fristDato, gjelderFra, gjelderTil, onCancel } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     const [skjemaState, settSkjemaState] = useState<Skjema>({
@@ -134,4 +134,4 @@ const MeldekortSkjema = (props: Props) => {
     );
 };
 
-export { MeldekortSkjema };
+export { BekreftelseSkjema };

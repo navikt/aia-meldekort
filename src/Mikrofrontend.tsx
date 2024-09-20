@@ -1,4 +1,4 @@
-import { Meldekort } from './components/meldekort/meldekort';
+import { Bekreftelse } from './components/bekreftelse/bekreftelse';
 import './index.css';
 import { Suspense, useEffect, useState } from 'react';
 import useSWRImmutable from 'swr/immutable';
@@ -44,7 +44,7 @@ function DataLoaderWrapper() {
     }, [isLoading, tilgjengeligeBekreftelser, erAktivArbeidssoker]);
 
     return (
-        <Meldekort
+        <Bekreftelse
             sprak={'nb'}
             sistInnsendteBekreftelse={sisteInnsendteBekreftelse}
             tilgjengeligeBekreftelser={tilgjengeligeBekreftelser}

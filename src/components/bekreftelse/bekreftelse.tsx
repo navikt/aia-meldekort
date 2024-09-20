@@ -1,13 +1,13 @@
 import { Heading } from '@navikt/ds-react';
 import { lagHentTekstForSprak } from '@navikt/arbeidssokerregisteret-utils';
-import { MeldekortSkjema } from './meldekort-skjema';
+import { BekreftelseSkjema } from './bekreftelse-skjema';
 import { Sprak } from '../../types/sprak';
 import { useEffect, useState } from 'react';
-import { MeldekortBesvart } from './meldekort-besvart';
+import { BekreftelseBesvart } from './bekreftelse-besvart';
 import { Kvittering } from './kvittering';
 import { sorterEtterEldsteFoerst } from '../../lib/sorter-etter-eldste-foerst';
-import { Bekreftelse, SistInnsendteBekreftelse, TilgjengeligeBekreftelser } from '../../types/bekreftelse';
-import { MeldekortUtmeldt } from './meldekort-utmeldt';
+import { BekreftelseType, SistInnsendteBekreftelse, TilgjengeligeBekreftelser } from '../../types/bekreftelse';
+import { IkkeAktivArbeidssoker } from './ikke-aktiv-arbeidssoker';
 import { loggAktivitet, loggVisning } from '../../lib/amplitude';
 
 export interface MeldekortProps {
@@ -15,7 +15,7 @@ export interface MeldekortProps {
     sistInnsendteBekreftelse?: SistInnsendteBekreftelse;
     tilgjengeligeBekreftelser?: TilgjengeligeBekreftelser;
     erAktivArbeidssoker: boolean;
-    onSubmit(data: Bekreftelse): Promise<void>;
+    onSubmit(data: BekreftelseType): Promise<void>;
 }
 
 const TEKSTER = {
@@ -24,19 +24,19 @@ const TEKSTER = {
     },
 };
 
-function Meldekort(props: MeldekortProps) {
+function Bekreftelse(props: MeldekortProps) {
     const { sprak, onSubmit, erAktivArbeidssoker } = props;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     const [visKvittering, settVisKvittering] = useState<boolean>(false);
-    const [sisteBekreftlse, settSisteBekreftlse] = useState<Bekreftelse>();
-    const [tilgjengeligeBekreftelser, settTilgjengeligeBekreftelser] = useState(
+    const [sisteBekreftlse, settSisteBekreftlse] = useState<BekreftelseType>();
+    const [tilgjengeligeBekreftelser, settTilgjengeligeBekreftelser] = useState<TilgjengeligeBekreftelser>(
         sorterEtterEldsteFoerst(props.tilgjengeligeBekreftelser),
     );
 
     const harTilgjengeligeBekreftelser = tilgjengeligeBekreftelser.length > 0;
     const gjeldendeBekreftelse = tilgjengeligeBekreftelser[0];
 
-    const onSubmitSkjema = async (bekreftelse: Bekreftelse) => {
+    const onSubmitSkjema = async (bekreftelse: BekreftelseType) => {
         await onSubmit(bekreftelse);
         settSisteBekreftlse(bekreftelse);
         settVisKvittering(true);
@@ -64,7 +64,7 @@ function Meldekort(props: MeldekortProps) {
     }, []);
 
     if (!erAktivArbeidssoker) {
-        return <MeldekortUtmeldt sprak={sprak} />;
+        return <IkkeAktivArbeidssoker sprak={sprak} />;
     }
 
     return (
@@ -73,7 +73,7 @@ function Meldekort(props: MeldekortProps) {
                 {tekst('heading')}
             </Heading>
             {props.sistInnsendteBekreftelse && !harTilgjengeligeBekreftelser && !visKvittering && (
-                <MeldekortBesvart
+                <BekreftelseBesvart
                     periode={'21.mars - 6. april'}
                     innsendtDato={'06.03'}
                     nesteDato={'20.04'}
@@ -82,7 +82,7 @@ function Meldekort(props: MeldekortProps) {
                 />
             )}
             {harTilgjengeligeBekreftelser && !visKvittering && (
-                <MeldekortSkjema
+                <BekreftelseSkjema
                     sprak={sprak}
                     fristDato={'2024-09-01'}
                     gjelderFra={gjeldendeBekreftelse!.gjelderFra}
@@ -106,4 +106,4 @@ function Meldekort(props: MeldekortProps) {
     );
 }
 
-export { Meldekort };
+export { Bekreftelse };
