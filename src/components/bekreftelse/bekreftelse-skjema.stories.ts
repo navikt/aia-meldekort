@@ -15,8 +15,12 @@ export const BekreftelseSkjemaStory: Story = {
     args: {
         sprak: 'nb',
         fristDato: '2024-09-09',
-        gjelderFra: '2024-08-24',
-        gjelderTil: '2024-09-03',
+        bekreftelse: {
+            bekreftelseId: '42',
+            gjelderFra: '2024-08-24',
+            gjelderTil: '2024-09-03',
+            periodeId: '24',
+        },
         onCancel() {
             console.log('onCancel');
         },

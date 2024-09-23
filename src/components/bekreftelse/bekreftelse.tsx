@@ -85,8 +85,7 @@ function Bekreftelse(props: BekreftelseProps) {
                 <BekreftelseSkjema
                     sprak={sprak}
                     fristDato={'2024-09-01'}
-                    gjelderFra={gjeldendeBekreftelse!.gjelderFra}
-                    gjelderTil={gjeldendeBekreftelse!.gjelderTil}
+                    bekreftelse={gjeldendeBekreftelse}
                     onSubmit={onSubmitSkjema}
                     onCancel={onCancel}
                 />

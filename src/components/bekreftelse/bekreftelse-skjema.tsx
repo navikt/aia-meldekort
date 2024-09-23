@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { BekreftAvsluttPeriode } from './bekreft-avslutt-periode';
 import prettyPrintDato from '../../lib/pretty-print-dato';
 import { loggAktivitet } from '../../lib/amplitude';
+import { BekreftelseType, TilgjengeligBekreftelse } from '../../types/bekreftelse';
 
 interface Skjema {
     harJobbetIDennePerioden?: boolean;
@@ -16,9 +17,8 @@ export interface Props {
     visIkkeSvartAdvarsel?: 'warning' | 'error';
     sprak: Sprak;
     fristDato: string;
-    gjelderFra: string;
-    gjelderTil: string;
-    onSubmit(data: Skjema): Promise<void>;
+    bekreftelse: TilgjengeligBekreftelse;
+    onSubmit(data: BekreftelseType): Promise<void>;
     onCancel(): void;
 }
 
@@ -45,7 +45,8 @@ const getRadioGroupValue = (skjemaVerdi: boolean | undefined) => {
 };
 
 const BekreftelseSkjema = (props: Props) => {
-    const { visIkkeSvartAdvarsel, sprak, fristDato, gjelderFra, gjelderTil, onCancel } = props;
+    const { visIkkeSvartAdvarsel, sprak, fristDato, bekreftelse, onCancel } = props;
+    const { gjelderFra, gjelderTil } = bekreftelse;
     const tekst = lagHentTekstForSprak(TEKSTER, sprak);
     const [skjemaState, settSkjemaState] = useState<Skjema>({
         harJobbetIDennePerioden: undefined,
@@ -70,7 +71,7 @@ const BekreftelseSkjema = (props: Props) => {
         }
 
         settSenderSkjema(true);
-        await props.onSubmit(skjemaState as any);
+        await props.onSubmit({ ...skjemaState, bekreftelseId: bekreftelse.bekreftelseId } as BekreftelseType);
         settSenderSkjema(false);
     };
 
