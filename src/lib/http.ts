@@ -14,6 +14,7 @@ interface ApiError extends Error {
 const fetcher: Fetch<any> = async (url, opts = {}) => {
     const response = await fetch(url, {
         method: opts?.method ?? 'GET',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
             accept: 'application/json',
