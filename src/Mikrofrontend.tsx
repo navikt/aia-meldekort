@@ -15,15 +15,8 @@ function DataLoaderWrapper() {
     const { data: perioder /*isLoading: lasterPerioder*/ } = useSWRImmutable(ARBEIDSOKERPERIODER_URL, fetcher, {
         suspense: true,
     });
-    const { data: tilgjengeligeBekreftelser, isLoading: lasterBekreftelser } = useSWRImmutable(
-        TILGJENGELIGE_BEKREFTELSER,
-        fetcher,
-        {
-            suspense: true,
-        },
-    );
-    const { data: sisteInnsendteBekreftelse } = useSWRImmutable(
-        fetchSisteInnsendte ? SISTE_INNSENDTE_BEKREFTELSE : null,
+    const { data: tilgjengeligeBekreftelser /* isLoading: lasterBekreftelser*/ } = useSWRImmutable(
+        `${TILGJENGELIGE_BEKREFTELSER}?useMockData=true`,
         fetcher,
         {
             suspense: true,
