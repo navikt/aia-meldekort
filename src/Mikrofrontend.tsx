@@ -16,7 +16,7 @@ function DataLoaderWrapper() {
         suspense: true,
     });
     const { data: tilgjengeligeBekreftelser /* isLoading: lasterBekreftelser*/ } = useSWRImmutable(
-        `${TILGJENGELIGE_BEKREFTELSER}`,
+        TILGJENGELIGE_BEKREFTELSER,
         fetcher,
         {
             suspense: true,
